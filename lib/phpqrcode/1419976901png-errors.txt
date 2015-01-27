@@ -1,0 +1,1 @@
+2014-12-30 22:01:41: Warning: imagepng() [<a href='function.imagepng'>function.imagepng</a>]: Unable to open 'C:\www\gift\trunk\varmt/qrtmp/1419976901png' for writing: No such file or directory  in C:\www\gift\trunk\lib\phpqrcode\qrimage.php on line 43
