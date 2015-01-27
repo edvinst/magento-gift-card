@@ -1,0 +1,5 @@
+<?php $giftCardPdf = $this->getGiftCardPdf(); ?>
+<?php if ($giftCardPdf): ?>
+<span class="separator">|</span>
+<a href="<?php echo $giftCardPdf ?>" class="link-giftcard-pdf"><?php echo $this->__('Download Gift Cards (.pdf)') ?></a>
+<?php  endif; ?>

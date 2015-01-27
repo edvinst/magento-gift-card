@@ -1,0 +1,25 @@
+table#creditmemo_gift_card td {
+    padding: 3px 0 10px 0;
+}
+
+#refund_gift_card {
+    width: 60px !important;
+    margin-left: 18px;
+    text-align: right;
+}
+.gift_card_design_fieldset table{
+    float: left;
+}
+
+.gift_card_thumb {
+    padding: 50px 0 0 0;
+}
+.gift_card_preview_img,
+.gift_card_thumb img{
+    width: 100%;
+}
+
+.gift_card_design_content {
+    float: right;
+    width: 50%;
+}

@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_giftcard_series_edit>
+        <reference name="head">
+            <action method="addJs"><script>mt/giftcard/adminhtml/gift_card_series.js</script></action>
+        </reference>
+    </adminhtml_giftcard_series_edit>
+
+    <adminhtml_giftcard_giftcard_import>
+        <reference name="head">
+            <action method="addJs"><script>mt/giftcard/adminhtml/gift_card.js</script></action>
+        </reference>
+    </adminhtml_giftcard_giftcard_import>
+
+    <adminhtml_giftcard_template_edit>
+        <reference name="head">
+            <action method="addJs"><script>mt/giftcard/adminhtml/gift_card_template.js</script></action>
+            <action method="addJs"><script>mt/giftcard/adminhtml/jscolor/jscolor.js</script></action>
+            <action method="addCss"><name>mt/giftcard/gift_card_style.css</name></action>
+        </reference>
+    </adminhtml_giftcard_template_edit>
+
+    <adminhtml_giftcard_series_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="giftcard/adminhtml_giftcard_series_edit_tabs_generate_grid" name="giftcard_adminhtml_giftcard_series_edit_tabs_generate_grid" />
+        </block>
+    </adminhtml_giftcard_series_grid>
+
+    <adminhtml_giftcard_giftcard_grid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="giftcard/adminhtml_giftcard_giftcard_list_grid" name="giftcard_adminhtml_giftcard_giftcard_list_grid" />
+        </block>
+    </adminhtml_giftcard_giftcard_grid>
+
+    <adminhtml_catalog_product_giftcardseries>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="giftcard/adminhtml_catalog_product_edit_tabs_giftcardseries_grid" name="catalog_product_edit_tabs_giftcardseries_grid"/>
+            <block type="adminhtml/widget_grid_serializer" name="giftcard_grid_serializer">
+                <reference name="giftcard_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>catalog_product_edit_tabs_giftcardseries_grid</grid_block_name>
+                        <data_callback>getSelectedGiftCardSeriesProducts</data_callback>
+                        <hidden_input_name>links[giftcard]</hidden_input_name>
+                        <reload_param_name>products_gift_card</reload_param_name>
+                    </action>
+                    <action method="addColumnInputName">
+                        <input_name>position</input_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_catalog_product_giftcardseries>
+
+    <adminhtml_catalog_product_giftcardtab>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="giftcard/adminhtml_catalog_product_edit_tabs_giftcard_form" name="catalog_product_edit_tabs_giftcard_form"/>
+
+        </block>
+    </adminhtml_catalog_product_giftcardtab>
+
+    <adminhtml_catalog_product_giftcardseriesgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="giftcard/adminhtml_catalog_product_edit_tabs_giftcardseries_grid" name="catalog_product_edit_tabs_giftcardseries_grid"/>
+        </block>
+    </adminhtml_catalog_product_giftcardseriesgrid>
+
+    <adminhtml_sales_order_creditmemo_new>
+        <reference name="head">
+            <action method="addCss"><name>mt/giftcard/gift_card_style.css</name></action>
+        </reference>
+
+        <reference name="creditmemo_totals">
+            <!--block type="giftcard/adminhtml_sales_creditmemo_total_giftcard" name="total_gift_card_total" as="gift_card_total">
+            </block-->
+            <block type="giftcard/adminhtml_sales_creditmemo_create_total_giftcard" name="gift_card_total" template="mt/giftcard/sales/creditmemo/create/total/giftcard.phtml" />
+
+        </reference>
+
+        <reference name="order_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+
+    </adminhtml_sales_order_creditmemo_new>
+
+    <adminhtml_sales_order_creditmemo_view>
+
+        <reference name="creditmemo_totals">
+            <block type="giftcard/adminhtml_sales_creditmemo_view_total_giftcard" name="gift_card_totals"  />
+        </reference>
+
+        <reference name="creditmemo_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+
+    </adminhtml_sales_order_creditmemo_view>
+
+    <adminhtml_sales_order_view>
+
+        <reference name="order_totals">
+            <block type="giftcard/adminhtml_sales_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+
+        <reference name="order_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+
+    </adminhtml_sales_order_view>
+
+    <adminhtml_sales_order_invoice_new>
+
+        <reference name="invoice_totals">
+            <block type="giftcard/adminhtml_sales_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+
+        <reference name="order_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+
+    </adminhtml_sales_order_invoice_new>
+
+    <adminhtml_sales_order_invoice_updateqty>
+
+        <reference name="order_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+
+        <reference name="invoice_totals">
+            <block type="giftcard/adminhtml_sales_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+    </adminhtml_sales_order_invoice_updateqty>
+
+    <adminhtml_sales_order_invoice_view>
+
+        <reference name="invoice_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+
+        <reference name="invoice_totals">
+            <block type="giftcard/adminhtml_sales_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+
+    </adminhtml_sales_order_invoice_view>
+
+
+    <adminhtml_sales_order_shipment_new>
+        <reference name="order_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+    </adminhtml_sales_order_shipment_new>
+
+    <adminhtml_sales_order_shipment_view>
+        <reference name="shipment_items">
+            <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
+        </reference>
+    </adminhtml_sales_order_shipment_view>
+
+  <!--adminhtml_sales_order_creditmemo_new>
+        <reference name="creditmemo_totals">
+            <block type="giftcard/adminhtml_sales_creditmemo_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+
+    <adminhtml_sales_order_creditmemo_view>
+        <reference name="creditmemo_totals">
+            <block type="giftcard/adminhtml_sales_creditmemo_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+    </adminhtml_sales_order_creditmemo_view-->
+
+    <!--adminhtml_catalog_product_new>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>gift_card</name>
+                <block>giftcard/adminhtml_catalog_product_edit_tab</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_new-->
+
+    <!--adminhtml_catalog_product_edit>
+        <reference name="product_tabs">
+            <action method="addTab">
+                <name>gift_card</name>
+                <block>giftcard/adminhtml_catalog_product_edit_tab</block>
+            </action>
+        </reference>
+    </adminhtml_catalog_product_edit-->
+
+
+</layout>

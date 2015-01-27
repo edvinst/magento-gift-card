@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <menu>
+        <giftcard translate="title" module="giftcard">
+            <title>Gift Card</title>
+            <sort_order>51</sort_order>
+            <children>
+                <giftcard>
+                    <title>Manage Gift Cards</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/giftcard_giftcard/index</action>
+                </giftcard>
+                <series>
+                    <title>Gift Cards Series</title>
+                    <sort_order>2</sort_order>
+                    <action>adminhtml/giftcard_series/index</action>
+                </series>
+                <template>
+                    <title>Gift Cards Templates</title>
+                    <sort_order>3</sort_order>
+                    <action>adminhtml/giftcard_template/index</action>
+                </template>
+                <settings>
+                    <title>Settings</title>
+                    <sort_order>5</sort_order>
+                    <action>adminhtml/system_config/edit/section/giftcard</action>
+                </settings>
+            </children>
+        </giftcard>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <giftcard translate="title" module="giftcard">
+                                        <title></title>
+                                        <sort_order>60</sort_order>
+                                    </giftcard>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+ </config>

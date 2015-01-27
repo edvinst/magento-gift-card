@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MT_Giftcard>
+            <version>1.0.4</version>
+        </MT_Giftcard>
+    </modules>
+    <global>
+        <blocks>
+            <giftcard>
+                <class>MT_Giftcard_Block</class>
+            </giftcard>
+            <checkout>
+                <rewrite>
+                    <cart_item_renderer>MT_Giftcard_Block_Checkout_Cart_Item_Renderer</cart_item_renderer>
+                </rewrite>
+            </checkout>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_view>MT_Giftcard_Block_Adminhtml_Sales_Order_View</sales_order_view>
+                    <catalog_product_edit_tabs>MT_Giftcard_Block_Adminhtml_Catalog_Product_Edit_Tabs</catalog_product_edit_tabs>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+        <helpers>
+            <giftcard>
+                <class>MT_Giftcard_Helper</class>
+            </giftcard>
+        </helpers>
+        <models>
+            <giftcard>
+                <class>MT_Giftcard_Model</class>
+                <resourceModel>giftcard_resource</resourceModel>
+            </giftcard>
+
+            <giftcard_resource>
+                <class>MT_Giftcard_Model_Resource</class>
+                <entities>
+                    <giftcard>
+                        <table>mt_giftcard</table>
+                    </giftcard>
+                    <series>
+                        <table>mt_giftcard_series</table>
+                    </series>
+                    <template>
+                        <table>mt_giftcard_template</table>
+                    </template>
+                    <option>
+                        <table>mt_giftcard_option</table>
+                    </option>
+                </entities>
+            </giftcard_resource>
+
+            <catalog>
+                <rewrite>
+                    <product_option>MT_Giftcard_Model_Catalog_Product_Option</product_option>
+                </rewrite>
+            </catalog>
+
+            <core>
+                <rewrite>
+                    <email_template_mailer>MT_Giftcard_Model_Email_Template_Mailer</email_template_mailer>
+                </rewrite>
+            </core>
+
+        </models>
+        <resources>
+            <giftcard_setup>
+                <setup>
+                    <module>MT_Giftcard</module>
+                    <class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </giftcard_setup>
+        </resources>
+        <catalog>
+            <product>
+                <type>
+                    <giftcard translate="label" module="catalog">
+                        <label>Gift Card</label>
+                        <model>giftcard/catalog_product_type_giftcard</model>
+                        <is_qty>0</is_qty>
+                        <index_data_retreiver>giftcard/catalogIndex_data_giftcard</index_data_retreiver>
+                        <price_model>giftcard/catalog_product_price</price_model>
+                        <composite>0</composite>
+                    </giftcard>
+                    <configurable translate="label" module="catalog">
+                        <allow_product_types>
+                            <giftcard/>
+                        </allow_product_types>
+                    </configurable>
+                </type>
+            </product>
+        </catalog>
+        <events>
+            <sales_order_place_after>
+                <observers>
+                    <discount_giftcard_balance>
+                        <type>singleton</type>
+                        <class>giftcard/observer</class>
+                        <method>discountGiftCardBalance</method>
+                    </discount_giftcard_balance>
+
+                    <create_giftcard_after_order>
+                        <type>singleton</type>
+                        <class>MT_Giftcard_Model_Observer</class>
+                        <method>createGiftCard</method>
+                    </create_giftcard_after_order>
+
+                </observers>
+            </sales_order_place_after>
+
+        </events>
+        <sales>
+            <quote>
+                <totals>
+                    <gift_card_total>
+                        <class>giftcard/sales_quote_total_giftcard</class>
+                        <after>discount,tax</after>
+                        <before>grand_total</before>
+                    </gift_card_total>
+                </totals>
+            </quote>
+            <order_invoice>
+                <totals>
+                    <gift_card_total>
+                        <class>giftcard/sales_order_invoice_total_giftcard</class>
+                        <after>discount,tax</after>
+                        <before>grand_total</before>
+                    </gift_card_total>
+                </totals>
+            </order_invoice>
+            <order_creditmemo>
+                <totals>
+                    <gift_card_total>
+                        <class>giftcard/sales_order_creditmemo_total_giftcard</class>
+                        <after>shipping</after>
+                        <before>grand_total,tax</before>
+                    </gift_card_total>
+                </totals>
+            </order_creditmemo>
+        </sales>
+        <pdf>
+            <totals>
+                <mt_gift_card_total translate="title">
+                    <title>Gift Card Discount</title>
+                    <source_field>mt_gift_card_total</source_field>
+                    <font_size>7</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>450</sort_order>
+                </mt_gift_card_total>
+            </totals>
+        </pdf>
+        <fieldsets>
+            <sales_convert_quote>
+                <mt_gift_card>
+                    <to_order>*</to_order>
+                </mt_gift_card>
+                <mt_gift_card_description>
+                    <to_order>*</to_order>
+                </mt_gift_card_description>
+            </sales_convert_quote>
+
+            <sales_convert_quote_address>
+                <mt_gift_card_total>
+                    <to_order>*</to_order>
+                </mt_gift_card_total>
+
+                <base_mt_gift_card_total>
+                    <to_order>*</to_order>
+                </base_mt_gift_card_total>
+            </sales_convert_quote_address>
+
+            <sales_convert_order>
+                <mt_gift_card>
+                    <to_invoice>*</to_invoice>
+                    <to_cm>*</to_cm>
+                </mt_gift_card>
+
+                <mt_gift_card_total>
+                    <to_invoice>*</to_invoice>
+                    <to_cm>*</to_cm>
+                </mt_gift_card_total>
+
+                <base_mt_gift_card_total>
+                    <to_invoice>*</to_invoice>
+                    <to_cm>*</to_cm>
+                </base_mt_gift_card_total>
+
+            </sales_convert_order>
+        </fieldsets>
+    </global>
+    <frontend>
+        <routers>
+            <giftcard>
+                <use>standard</use>
+                <args>
+                    <module>MT_Giftcard</module>
+                    <frontName>giftcard</frontName>
+                </args>
+            </giftcard>
+        </routers>
+        <layout>
+            <updates>
+                <giftcard>
+                    <file>mt/giftcard.xml</file>
+                </giftcard>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <MT_Giftcard>
+                    <files>
+                        <default>MT_Giftcard.csv</default>
+                    </files>
+                </MT_Giftcard>
+            </modules>
+        </translate>
+    </frontend>
+
+    <adminhtml>
+        <events>
+
+            <sales_order_creditmemo_refund>
+                <observers>
+                    <refund_giftcard_balance>
+                        <type>singleton</type>
+                        <class>giftcard/observer</class>
+                        <method>refundGiftCardBalance</method>
+                    </refund_giftcard_balance>
+                </observers>
+            </sales_order_creditmemo_refund>
+
+            <sales_order_invoice_register>
+                <observers>
+                    <forced_credit_memo>
+                        <type>singleton</type>
+                        <class>MT_Giftcard_Model_Observer</class>
+                        <method>forcedCreditMemo</method>
+                    </forced_credit_memo>
+                </observers>
+            </sales_order_invoice_register>
+
+            <sales_order_invoice_save_after>
+                <observers>
+                    <active_gift_card>
+                        <type>singleton</type>
+                        <class>MT_Giftcard_Model_Observer</class>
+                        <method>activeGiftCard</method>
+                    </active_gift_card>
+                </observers>
+            </sales_order_invoice_save_after>
+
+            <sales_order_creditmemo_save_after>
+                <observers>
+                    <deactivate_gift_card>
+                        <type>singleton</type>
+                        <class>MT_Giftcard_Model_Observer</class>
+                        <method>deactivateGiftCard</method>
+                    </deactivate_gift_card>
+                </observers>
+            </sales_order_creditmemo_save_after>
+
+            <catalog_product_save_after>
+                <observers>
+                    <gift_card_catalog_product_prepare_save>
+                        <class>giftcard/observer</class>
+                        <method>catalogProductSaveAfter</method>
+                    </gift_card_catalog_product_prepare_save>
+                </observers>
+            </catalog_product_save_after>
+
+            <adminhtml_sales_order_creditmemo_register_before>
+                <observers>
+                    <allow_zero_credit_memo>
+                        <class>giftcard/observer</class>
+                        <method>allowZeroCreditMemo</method>
+                    </allow_zero_credit_memo>
+                </observers>
+            </adminhtml_sales_order_creditmemo_register_before>
+        </events>
+
+        <translate>
+            <modules>
+                <MT_Giftcard>
+                    <files>
+                        <default>MT_Giftcard_Adminhtml.csv</default>
+                    </files>
+                </MT_Giftcard>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <news>
+                    <file>mt/giftcard.xml</file>
+                </news>
+            </updates>
+        </layout>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <giftcard before="Mage_Adminhtml">MT_Giftcard_Adminhtml</giftcard>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <default>
+        <giftcard>
+            <general>
+                <is_active>0</is_active>
+                <jquery>0</jquery>
+            </general>
+            <cart>
+                <form_in_cart>1</form_in_cart>
+                <form_in_checkout>1</form_in_checkout>
+            </cart>
+            <mail>
+                <pdf_order_new_mail>1</pdf_order_new_mail>
+                <pdf_order_invoice_mail>1</pdf_order_invoice_mail>
+            </mail>
+        </giftcard>
+    </default>
+
+</config>
+

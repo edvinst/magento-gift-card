@@ -1,0 +1,8 @@
+<config>
+  <modules>
+    <MT_Giftcard>
+      <active>true</active>
+      <codePool>community</codePool>
+    </MT_Giftcard>
+  </modules>
+</config>

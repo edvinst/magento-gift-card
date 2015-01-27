@@ -1,0 +1,13 @@
+<?php
+
+class MT_Giftcard_Block_Adminhtml_Giftcard_Series_List extends Mage_Adminhtml_Block_Widget_Grid_Container
+{
+    public function __construct()
+    {
+        $this->_blockGroup = 'giftcard';
+        $this->_controller = 'adminhtml_giftcard_series_list';
+        $this->_headerText = Mage::helper('giftcard')->__('Gift Cards Series');
+        parent::__construct();
+    }
+
+}

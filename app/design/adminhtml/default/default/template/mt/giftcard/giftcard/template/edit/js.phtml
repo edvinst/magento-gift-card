@@ -1,0 +1,20 @@
+<?php  if (Mage::app()->getRequest()->getParam('id') > 0):?>
+<script type="text/javascript">
+    document.observe("dom:loaded", function() {
+        GiftCardTemplate.init({
+            'preview_link': '<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/giftcard_template/preview/");?>',
+            'designPath': '<?php echo Mage::getBaseUrl('skin').'frontend/base/default/mt/giftcard/design/';?>'
+        });
+
+        Event.observe($('design'),'change', function(){
+            GiftCardTemplate.changeDesign($('design').value);
+        });
+
+        $$('.gift_card_design_value').each(function(element) {
+            element.observe('change', function(){
+                GiftCardTemplate.loadPreview($('design').value);
+            });
+        });
+    });
+</script>
+<?php endif; ?>

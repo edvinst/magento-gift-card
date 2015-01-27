@@ -1,0 +1,16 @@
+<?php $giftCards = $this->getGiftCardArray(); ?>
+<?php if (count($giftCards) != 0): ?>
+    <?php foreach ($giftCards as $giftCard): ?>
+        <?php  $giftCardObj = $giftCard['source']; ?>
+        <tr>
+            <td class="label">
+                <?php echo $this->__('Refund to Gift Card (%s)', $giftCard['code']) ?></td>
+            <td>
+                <?php echo $giftCard['total']?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+        </tr>
+    <?php endforeach; ?>
+<?php endif; ?>

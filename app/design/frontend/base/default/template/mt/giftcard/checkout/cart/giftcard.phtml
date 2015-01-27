@@ -1,0 +1,69 @@
+<?php
+if ($this->isVisible()):
+$giftCardCollection = $this->getAppliedGiftCards();
+$amount = $this->getAmount();
+$cartTotal = $this->getCartTotalWithoutGiftCard();
+?>
+<form id="discount-giftcard-form" action="<?php echo $this->getUrl(/*'checkout/cart/giftcardPost'*/'giftcard/checkout_cart/giftcardpost') ?>" method="post">
+
+    <div class="discount gc giftcard">
+        <h2><?php echo $this->__('Gift Card') ?></h2>
+        <div class="discount-form">
+            <?php //if ($cartTotal > $amount): ?>
+            <label for="giftcard_code"><?php echo $this->__('Enter your gift card code if you have one.') ?></label>
+
+            <div class="input-box">
+                <input class="input-text" id="giftcard_code" name="giftcard_code" value="<?php echo $this->escapeHtml($this->getgiftcardCode()) ?>" />
+            </div>
+            <?php //endif; ?>
+
+            <?php if (count($giftCardCollection) > 0): ?>
+            <dl class="gc-applied-gift-cards">
+                <dt><?php echo $this->__('Applied Gift Cards');?></dt>
+                <dd>
+                    <ul>
+                        <?php foreach ($giftCardCollection as $giftCard): ?>
+                        <li>
+                            <?php if (count($giftCardCollection) > 1): ?>
+                            <input name="giftcard_remove[]" value="<?php echo $giftCard->getCode();?>"  class="checkbox" type="checkbox">
+                            <?php else: ?>
+                                <input name="giftcard_remove[]" value="<?php echo $giftCard->getCode();?>" type="hidden">
+                            <?php endif; ?>
+                            <label><?php echo $giftCard->getCode();?>                                                                        -
+                                <span class="price"><?php echo $giftCard->getFormatedBalance();?></span>
+                            </label>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </dd>
+            </dl>
+            <?php endif; ?>
+
+            <div class="buttons-set">
+                <input type="hidden" name="remove" id="remove-giftcard" value="0" />
+                <button type="button" title="<?php echo $this->__('Apply Gift Card') ?>" class="button active" onclick="discountGiftCardForm.submit(false)" value="<?php echo $this->__('Apply Gift Card') ?>"><span><span><?php echo $this->__('Apply Gift Card') ?></span></span></button>
+                <?php if (count($giftCardCollection) > 0): ?>
+                <button type="button" title="<?php echo $this->__('Remove Gift Cards') ?>" class="button" onclick="discountGiftCardForm.submit(true)" value="<?php echo $this->__('Remove Gift Cards') ?>"><span><span><?php echo $this->__('Remove Gift Cards') ?></span></span></button>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+var discountGiftCardForm = new VarienForm('discount-giftcard-form');
+discountGiftCardForm.submit = function (isRemove) {
+    if (isRemove) {
+        if ($('giftcard_code'))
+            $('giftcard_code').removeClassName('required-entry');
+        $('remove-giftcard').value = "1";
+    } else {
+        if ($('giftcard_code'))
+            $('giftcard_code').addClassName('required-entry');
+        $('remove-giftcard').value = "0";
+    }
+    return VarienForm.prototype.submit.bind(discountGiftCardForm)();
+}
+//]]>
+</script>
+<?php endif; ?>

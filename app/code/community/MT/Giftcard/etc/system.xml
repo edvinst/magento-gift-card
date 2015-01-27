@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <magetrend translate="label" module="giftcard">
+            <label>MageTrend Extensions</label>
+            <sort_order>401</sort_order>
+        </magetrend>
+    </tabs>
+    <sections>
+        <giftcard translate="label" module="giftcard">
+            <label>Gift Card</label>
+            <tab>magetrend</tab>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_active translate="label">
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </is_active>
+                        <jquery translate="label">
+                            <label>Include jQuery</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </jquery>
+
+                    </fields>
+                </general>
+                <cart>
+                    <label>Cart and Checkout Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <form_in_cart translate="label">
+                            <label>Display "Add Gift Card" Form in Cart </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </form_in_cart>
+
+                        <form_in_checkout translate="label">
+                            <label>Display "Add Gift Card" Form in Checkout </label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </form_in_checkout>
+                    </fields>
+                </cart>
+                <mail translate="label">
+                    <label>Mail Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <pdf_order_new_mail translate="label">
+                            <label>Add PDF to New Order Confirmation Email</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </pdf_order_new_mail>
+
+                        <pdf_order_invoice_mail translate="label">
+                            <label>Add PDF to Invoice Email</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </pdf_order_invoice_mail>
+                    </fields>
+                </mail>
+            </groups>
+        </giftcard>
+
+    </sections>
+</config>

@@ -1,0 +1,27 @@
+<?php
+$_product = $this->getProduct();
+$seriesCollection = $this->getAllowGiftCardSeries();
+$selectValue = $this->getValueSelect();
+?>
+<?php if ($seriesCollection):?>
+    <dl>
+            <dt><label class="required"><em>*</em><?php echo $selectValue['label']?></label></dt>
+            <dd class="last" >
+                <div class="input-box">
+                    <select name="giftcard_attribute[giftcard_value]" id="gift_card_<?php echo $selectValue['id']?>" class="required-entry gift-card-select">
+                        <option value=""><?php echo $this->__('Choose an Option...');?></option>
+                        <?php foreach ($seriesCollection as $series):?>
+                        <option value="<?php echo $series->getId();?>"><?php echo $series->getFormatedValue();?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </dd>
+    </dl>
+<?php endif;?>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        GiftCardOptions.init(<?php echo $this->getJsConfig();?>);
+    });
+</script>

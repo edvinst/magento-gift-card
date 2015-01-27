@@ -1,0 +1,58 @@
+.gc.discount .button.active{
+    background-color: rgb(51, 153, 204);
+    color: #ffffff;
+}
+
+.gc.discount .button.active:hover {
+    background-color: rgb(46, 138, 184);
+}
+
+.gc.giftcard.discount h2,
+.gc .gc-applied-gift-cards dt {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 0 5px;
+    display: block;
+}
+
+.gc.discount label {
+    font-size: 12px;
+    font-weight: normal;
+    font-family: "Helvetica Neue",Verdana,Arial,sans-serif;
+
+}
+
+.gc .gc-applied-gift-cards {
+    padding-top: 10px;
+}
+
+/*checkout*/
+.gc-cart-action {
+    padding: 5px 0 10px;
+    height: auto;
+    overflow: hidden;;
+}
+
+.gc-cart-action .button-box {
+    display: block;
+    float: left;
+    width: auto;
+}
+.gc-cart-action .please-wait {
+    float: left;
+    display: block;
+    width: auto;
+}
+
+#gc-please-wait {
+    display: none;
+}
+#gc-applied-codes-error {
+    color: #eb5040;
+    height: 24px;
+    line-height: 24px;
+    margin: 5px 0 0 10px;
+    white-space: nowrap;
+    float: left;
+    width: auto;
+}

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+
+    <PRODUCT_TYPE_giftcard translate="label" module="catalog">
+        <label>Catalog Product View (Gift Card)</label>
+        <reference name="head">
+            <action method="addItem" ifconfig="giftcard/general/jquery"><type>js</type><name>mt/giftcard/jquery-2.1.1.min.js</name><params/></action>
+            <action method="addItem"><type>js</type><name>mt/giftcard/giftcard.js</name><params/></action>
+        </reference>
+
+        <reference name="product.info.options.wrapper">
+            <block type="giftcard/catalog_product_view_type_giftcard" name="product.info.options.giftcard" as="options_giftcard" before="-" template="mt/giftcard/catalog/product/view/type/options/giftcard.phtml">
+            </block>
+        </reference>
+    </PRODUCT_TYPE_giftcard>
+
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem" ifconfig="giftcard/general/jquery"><type>js</type><name>mt/giftcard/jquery-2.1.1.min.js</name><params/></action>
+            <action method="addItem"><type>js</type><name>mt/giftcard/giftcardcheckout.js</name><params/></action>
+            <action method="addCss"><stylesheet>css/mt/giftcard/giftcard.css</stylesheet> </action>
+        </reference>
+        <reference name="checkout.onepage.payment.methods_additional">
+            <block type="giftcard/checkout_payment_giftcard" name="checkout.onepage.payment.methods_additional.giftcard" as="methods_additional_giftcard" before="-">
+                <block type="giftcard/checkout_payment_giftcard_form" name="checkout.onepage.payment.methods_additional.giftcard.form" as="methods_additional_giftcard_form"/>
+            </block>
+        </reference>
+    </checkout_onepage_index>
+
+    <checkout_cart_index>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/mt/giftcard/giftcard.css</stylesheet> </action>
+        </reference>
+        <reference name="checkout.cart.extra">
+            <block type="giftcard/checkout_cart_giftcard" name="giftcard" template="mt/giftcard/checkout/cart/giftcard.phtml"/>
+        </reference>
+    </checkout_cart_index>
+
+    <sales_email_order_items>
+        <reference name="items">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_email_items_order_giftcard</block><template>email/order/items/order/default.phtml</template></action>
+        </reference>
+        <reference name="order_totals">
+            <block type="giftcard/sales_order_totals_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+    </sales_email_order_items>
+
+    <sales_email_order_invoice_items>
+        <reference name="items">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_email_items_invoice_giftcard</block><template>email/order/items/invoice/default.phtml</template></action>
+        </reference>
+
+        <reference name="invoice_totals">
+            <block type="giftcard/sales_order_invoice_totals_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
+    </sales_email_order_invoice_items>
+
+    <sales_order_view>
+        <reference name="order_items">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_item_renderer_giftcard</block><template>sales/order/items/renderer/default.phtml</template></action>
+        </reference>
+        <reference name="sales.order.info.buttons">
+            <block type="giftcard/sales_order_info_buttons" name="giftcard_buttons" template="mt/giftcard/sales/order/info/buttons.phtml"/>
+        </reference>
+    </sales_order_view>
+
+    <sales_order_invoice>
+        <reference name="invoice_items">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_invoice_item_renderer_giftcard</block><template>sales/order/invoice/items/renderer/default.phtml</template></action>
+        </reference>
+    </sales_order_invoice>
+
+    <sales_order_shipment>
+        <reference name="shipment_items">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_shipment_item_renderer_giftcard</block><template>sales/order/shipment/items/renderer/default.phtml</template></action>
+        </reference>
+    </sales_order_shipment>
+
+    <sales_order_creditmemo>
+        <reference name="creditmemo_items">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_creditmemo_item_renderer_giftcard</block><template>sales/order/creditmemo/items/renderer/default.phtml</template></action>
+        </reference>
+    </sales_order_creditmemo>
+
+    <sales_order_print>
+        <reference name="sales.order.print">
+            <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_print_item_renderer_giftcard</block><template>sales/order/items/renderer/default.phtml</template></action>
+        </reference>
+    </sales_order_print>
+
+</layout>
