@@ -22,8 +22,9 @@ class MT_Giftcard_Block_Adminhtml_Giftcard_Giftcard_List_Grid extends Mage_Admin
     {
         if (!$this->__collectionEmpty) {
             $collection = Mage::getResourceModel('giftcard/giftcard_collection');
+            $table = Mage::getSingleton('core/resource')->getTableName('giftcard/series');
             $collection->getSelect()
-                ->joinLeft(array('t1' => 'mt_giftcard_series'), 'main_table.series_id=t1.entity_id', array('series_name' => 't1.name'));
+                ->joinLeft(array('t1' => $table), 'main_table.series_id=t1.entity_id', array('series_name' => 't1.name'));
             $this->applyCollectionFilters($collection);
             $this->setCollection($collection);
         }

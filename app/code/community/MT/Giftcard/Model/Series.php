@@ -60,8 +60,9 @@ class MT_Giftcard_Model_Series extends Mage_Core_Model_Abstract
             return null;
 
         $collection = $this->getCollection();
+        $table = Mage::getSingleton('core/resource')->getTableName('giftcard/series_product');
         $collection->getSelect()
-            ->join(array('t1' => 'mt_giftcardseries_product'), 'main_table.entity_id=t1.giftcard_series_id', array(
+            ->join(array('t1' => $table), 'main_table.entity_id=t1.giftcard_series_id', array(
                 'position' => 't1.position',
             ))
             ->where('t1.product_id =?', $productId);

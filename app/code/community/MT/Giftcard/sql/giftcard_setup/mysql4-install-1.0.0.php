@@ -3,8 +3,14 @@
 $installer = $this;
 $installer->startSetup();
 
+$giftCardTable = $installer->getTable('giftcard/giftcard');
+$giftCardSeriesTable = $installer->getTable('giftcard/series');
+$giftCardTemplateTable = $installer->getTable('giftcard/template');
+$giftCardOptionTable = $installer->getTable('giftcard/option');
+$giftCardSeriesProductTable = $installer->getTable('giftcard/series_product');
+
 $installer->run("
-CREATE TABLE IF NOT EXISTS `mt_giftcard` (
+CREATE TABLE IF NOT EXISTS `{$giftCardTable}` (
 	`entity_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'unique id',
 	`series_id` INT(5) UNSIGNED NULL DEFAULT NULL,
 	`template_id` INT(5) UNSIGNED NULL DEFAULT NULL,
@@ -27,7 +33,7 @@ AUTO_INCREMENT=0;
 ");
 
 $installer->run("
-CREATE TABLE IF NOT EXISTS `mt_giftcardseries_product` (
+CREATE TABLE IF NOT EXISTS `{$giftCardSeriesProductTable}` (
 	`giftcard_series_id` INT(11) NULL DEFAULT NULL,
 	`product_id` INT(11) NULL DEFAULT NULL,
 	`position` INT(5) UNSIGNED NULL DEFAULT NULL
@@ -37,7 +43,7 @@ ENGINE=InnoDB;
 ");
 
 $installer->run("
-CREATE TABLE IF NOT EXISTS `mt_giftcard_option` (
+CREATE TABLE IF NOT EXISTS `{$giftCardOptionTable}` (
 	`entity_id` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(50) NULL DEFAULT NULL,
 	`title` VARCHAR(255) NULL DEFAULT NULL,
@@ -51,7 +57,7 @@ ENGINE=InnoDB
 AUTO_INCREMENT=0;
 ");
 $installer->run("
-CREATE TABLE IF NOT EXISTS `mt_giftcard_series` (
+CREATE TABLE IF NOT EXISTS `{$giftCardSeriesTable}` (
 	`entity_id` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`template_id` INT(5) UNSIGNED NOT NULL,
 	`name` VARCHAR(50) NOT NULL,
@@ -72,7 +78,7 @@ ENGINE=InnoDB
 AUTO_INCREMENT=0;
 ");
 $installer->run("
-CREATE TABLE IF NOT EXISTS `mt_giftcard_template` (
+CREATE TABLE IF NOT EXISTS `{$giftCardTemplateTable}` (
 	`entity_id` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`is_active` INT(1) UNSIGNED NOT NULL DEFAULT '0',
 	`name` VARCHAR(50) NOT NULL,
@@ -105,18 +111,15 @@ AUTO_INCREMENT=0;
 ");
 
 $installer->run("
-INSERT IGNORE INTO `mt_giftcard_option` (`entity_id`, `name`, `title`, `type`, `source_model`, `is_required`) VALUES (1, 'giftcard_value', 'Gift Card Value', 'select', 'giftcard/option_source_value', 1);
+INSERT IGNORE INTO `{$giftCardOptionTable}` (`entity_id`, `name`, `title`, `type`, `source_model`, `is_required`) VALUES (1, 'giftcard_value', 'Gift Card Value', 'select', 'giftcard/option_source_value', 1);
 
-INSERT IGNORE INTO `mt_giftcard_template` (`entity_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (2, 1, 'Air Balloon two', '', 'default', 'Gift Card', 'Bo Balloons', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', '#0089bf', '#C4ECF7', '#F25100', '#FFFFFF', '#1C1C1C', '', '', 'background2.jpg', '2015-01-06 15:14:38');
-INSERT IGNORE INTO `mt_giftcard_template` (`entity_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (4, 1, 'Bags & More', '', 'default', 'Gift Card', 'Bags & More', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', 'c21b35', '#FCFCFC', '0371c6', '', '', '', '', 'background4.jpg', '2015-01-06 14:30:50');
+INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (2, 1, 'Air Balloon two', '', 'default', 'Gift Card', 'Bo Balloons', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', '#0089bf', '#C4ECF7', '#F25100', '#FFFFFF', '#1C1C1C', '', '', 'background2.jpg', '2015-01-06 15:14:38');
+INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (4, 1, 'Bags & More', '', 'default', 'Gift Card', 'Bags & More', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', 'c21b35', '#FCFCFC', '0371c6', '', '', '', '', 'background4.jpg', '2015-01-06 14:30:50');
 
 ");
 
 $attributes = array(
     'price',
-    'special_price',
-    'special_from_date',
-    'special_to_date',
     'minimal_price',
     'tax_class_id',
     'group_price'

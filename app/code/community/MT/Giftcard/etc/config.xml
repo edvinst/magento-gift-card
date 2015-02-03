@@ -48,6 +48,9 @@
                     <option>
                         <table>mt_giftcard_option</table>
                     </option>
+                    <series_product>
+                        <table>mt_giftcard_series_product</table>
+                    </series_product>
                 </entities>
             </giftcard_resource>
 
