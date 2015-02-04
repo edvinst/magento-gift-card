@@ -70,10 +70,6 @@ class MT_Giftcard_Adminhtml_Giftcard_ExportController extends Mage_Adminhtml_Con
                 'content' => $content
             ));
 
-            $this->_redirect('adminhtml/sales_order/view/', array(
-                'order_id' => $orderId
-            ));
-
         } catch (Mage_Core_Model_Exception $e) {
             $this->_getSession()->addError($e->getMessage());
         } catch (Mage_Core_Exception $e) {
@@ -81,6 +77,5 @@ class MT_Giftcard_Adminhtml_Giftcard_ExportController extends Mage_Adminhtml_Con
         } catch (Exception $e) {
             $this->_getSession()->addError($e->getMessage());
         }
-        $this->_redirect('adminhtml/sales_order/view/', array('order_id' => $orderId));
     }
 }
