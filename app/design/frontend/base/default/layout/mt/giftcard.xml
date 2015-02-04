@@ -6,7 +6,7 @@
         <label>Catalog Product View (Gift Card)</label>
         <reference name="head">
             <action method="addItem" ifconfig="giftcard/general/jquery"><type>js</type><name>mt/giftcard/jquery-2.1.1.min.js</name><params/></action>
-            <action method="addItem"><type>js</type><name>mt/giftcard/giftcard.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/mt/giftcard/giftcard.js</name><params/></action>
         </reference>
 
         <reference name="product.info.options.wrapper">
@@ -18,7 +18,7 @@
     <checkout_onepage_index>
         <reference name="head">
             <action method="addItem" ifconfig="giftcard/general/jquery"><type>js</type><name>mt/giftcard/jquery-2.1.1.min.js</name><params/></action>
-            <action method="addItem"><type>js</type><name>mt/giftcard/giftcardcheckout.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/mt/giftcard/giftcardcheckout.js</name><params/></action>
             <action method="addCss"><stylesheet>css/mt/giftcard/giftcard.css</stylesheet> </action>
         </reference>
         <reference name="checkout.onepage.payment.methods_additional">
