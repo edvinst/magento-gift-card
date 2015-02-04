@@ -149,6 +149,7 @@ class MT_Giftcard_Model_Observer
         $order->setMtGiftCardDescription(rtrim($discountLabel, ', '));
         $order->setMtGiftCard(serialize($giftCardData));
         $order->setForcedCanCreditmemo(0);
+        $order->save();
     }
 
     public function refundGiftCardBalance($observer)
