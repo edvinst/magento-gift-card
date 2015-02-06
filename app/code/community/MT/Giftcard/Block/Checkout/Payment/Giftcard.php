@@ -8,8 +8,5 @@ class MT_Giftcard_Block_Checkout_Payment_Giftcard
         $this->setTemplate('mt/giftcard/checkout/payment/giftcard.phtml');
     }
 
-    public function getControllerUrl()
-    {
-        return Mage::getUrl('giftcard/checkout_cart');
-    }
+
 }

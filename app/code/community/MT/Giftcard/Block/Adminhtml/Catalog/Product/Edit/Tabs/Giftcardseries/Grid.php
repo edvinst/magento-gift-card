@@ -2,7 +2,8 @@
 
 
 
-class MT_Giftcard_Block_Adminhtml_Catalog_Product_Edit_Tabs_Giftcardseries_Grid extends MT_Giftcard_Block_Adminhtml_Giftcard_Series_List_Grid
+class MT_Giftcard_Block_Adminhtml_Catalog_Product_Edit_Tabs_Giftcardseries_Grid
+    extends MT_Giftcard_Block_Adminhtml_Giftcard_Series_List_Grid
 {
 
     private $__selectedGiftCardSeries = null;
@@ -90,8 +91,8 @@ class MT_Giftcard_Block_Adminhtml_Catalog_Product_Edit_Tabs_Giftcardseries_Grid 
 
         ));
 
-        $this->removeColumn('status');
-        $this->removeColumn('store_id');
+        parent::_prepareColumns();
+        unset($this->_columns['store_id']);
     }
 
    public function _getSelectedGiftCardsSeries()

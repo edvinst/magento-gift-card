@@ -5,6 +5,7 @@ class MT_Giftcard_GiftcardController
 {
     public function pdfAction()
     {
+
         if(!Mage::helper('customer')->isLoggedIn()){
             Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
         }
@@ -21,27 +22,28 @@ class MT_Giftcard_GiftcardController
                 ->setPageSize(1);
 
             if ($order = $orders->getFirstItem()) {
+                $content = Mage::getSingleton('giftcard/giftcard_action')
+                    ->exportOrderGiftCard($order->getId(), 'pdf');
 
-                $pdf = Mage::getModel('giftcard/giftcard_pdf');
-                $pdf->setOrder($order);
-                if ($pdf->createPdf()) {
-                    $pdfFile = $pdf->getPdfPath();
-                    $this->getResponse()
-                        ->setHttpResponseCode(200)
-                        ->setHeader('Pragma', 'public', true)
-                        ->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true)
-                        ->setHeader('Content-type', 'application/octet-stream', true)
-                        ->setHeader('Content-Length', filesize($pdfFile), true)
-                        ->setHeader('Content-Disposition', 'attachment; filename="'.Mage::helper('giftcard')->__('gift_card').'_'.$order->getIncrementId().'.pdf"', true)
-                        ->setHeader('Last-Modified', date('r'), true);
-                    $this->getResponse()->clearBody();
-                    $this->getResponse()->sendHeaders();
-                    ob_get_clean();
-                    echo file_get_contents($pdfFile);
-                    ob_end_flush();
-                    unlink($pdfFile);
-                    exit(0);
-                }
+                if (!file_exists($content['value']))
+                    throw new Exception(Mage::helper('giftcard')->__('Can not to create file'));
+
+                $pdfFile = $content['value'];
+                $this->getResponse()
+                    ->setHttpResponseCode(200)
+                    ->setHeader('Pragma', 'public', true)
+                    ->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true)
+                    ->setHeader('Content-type', 'application/octet-stream', true)
+                    ->setHeader('Content-Length', filesize($pdfFile), true)
+                    ->setHeader('Content-Disposition', 'attachment; filename="'.Mage::helper('giftcard')->__('gift_card').'_'.$order->getIncrementId().'.pdf"', true)
+                    ->setHeader('Last-Modified', date('r'), true);
+                $this->getResponse()->clearBody();
+                $this->getResponse()->sendHeaders();
+                ob_get_clean();
+                echo file_get_contents($pdfFile);
+                ob_end_flush();
+                unlink($pdfFile);
+                exit(0);
             }
         }
 

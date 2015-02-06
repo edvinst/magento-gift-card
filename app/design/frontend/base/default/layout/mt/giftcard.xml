@@ -26,6 +26,11 @@
                 <block type="giftcard/checkout_payment_giftcard_form" name="checkout.onepage.payment.methods_additional.giftcard.form" as="methods_additional_giftcard_form"/>
             </block>
         </reference>
+        <reference name="checkout.payment.methods">
+            <block type="giftcard/checkout_payment_giftcard" name="checkout.payment.methods.giftcard" as="additional" before="-">
+                <block type="giftcard/checkout_payment_giftcard_form" name="checkout.payment.methods.form" as="methods_additional_giftcard_form"/>
+            </block>
+        </reference>
     </checkout_onepage_index>
 
     <checkout_cart_index>
@@ -33,6 +38,9 @@
             <action method="addCss"><stylesheet>css/mt/giftcard/giftcard.css</stylesheet> </action>
         </reference>
         <reference name="checkout.cart.extra">
+            <block type="giftcard/checkout_cart_giftcard" name="giftcard" template="mt/giftcard/checkout/cart/giftcard.phtml"/>
+        </reference>
+        <reference name="checkout.cart">
             <block type="giftcard/checkout_cart_giftcard" name="giftcard" template="mt/giftcard/checkout/cart/giftcard.phtml"/>
         </reference>
     </checkout_cart_index>
@@ -63,11 +71,26 @@
         <reference name="sales.order.info.buttons">
             <block type="giftcard/sales_order_info_buttons" name="giftcard_buttons" template="mt/giftcard/sales/order/info/buttons.phtml"/>
         </reference>
+        <reference name="sales.order.info">
+            <block type="giftcard/sales_order_info_buttons" name="giftcard_buttons" template="mt/giftcard/sales/order/info/buttons.phtml"/>
+        </reference>
+        <reference name="order_totals">
+            <block type="giftcard/sales_order_totals_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+        </reference>
     </sales_order_view>
 
     <sales_order_invoice>
+        <reference name="sales.order.info.buttons">
+            <block type="giftcard/sales_order_info_buttons" name="giftcard_buttons" template="mt/giftcard/sales/order/info/buttons.phtml"/>
+        </reference>
+        <reference name="sales.order.info">
+            <block type="giftcard/sales_order_info_buttons" name="giftcard_buttons" template="mt/giftcard/sales/order/info/buttons.phtml"/>
+        </reference>
         <reference name="invoice_items">
             <action method="addItemRender"><type>giftcard</type><block>giftcard/sales_order_invoice_item_renderer_giftcard</block><template>sales/order/invoice/items/renderer/default.phtml</template></action>
+        </reference>
+        <reference name="invoice_totals">
+            <block type="giftcard/sales_order_invoice_totals_giftcard" name="total_gift_card_total" as="gift_card_total"/>
         </reference>
     </sales_order_invoice>
 

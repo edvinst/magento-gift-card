@@ -119,6 +119,11 @@ class MT_Giftcard_Model_Series extends Mage_Core_Model_Abstract
         );
     }
 
+    public function getFormatedOldPrice()
+    {
+        return Mage::helper('core')->currency($this->getOldPrice(), true, false);
+    }
+
     public function getFormatedPrice()
     {
         return Mage::helper('core')->currency($this->getPrice(), true, false);

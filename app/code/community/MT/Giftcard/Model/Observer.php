@@ -88,8 +88,11 @@ class MT_Giftcard_Model_Observer
             return;
 
         $order = $observer->getEvent()->getOrder();
-        $quote = $order->getQuote();
+        $quote = Mage::getSingleton('checkout/cart')->getQuote();
         $address = $quote->getShippingAddress();
+        if (!$address) {
+            return;
+        }
 
         $discountedFromGiftCard = $address->getMtGiftCardTotal()*-1;
         $giftCardData = $order->getMtGiftCard();

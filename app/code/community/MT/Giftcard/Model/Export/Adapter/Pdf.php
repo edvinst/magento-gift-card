@@ -76,6 +76,6 @@ class MT_Giftcard_Model_Export_Adapter_Pdf implements MT_Giftcard_Model_Export_A
         if (count($this->getPdf()->pages) == 0)
             throw new Mage_Core_Exception(Mage::helper('giftcard')->__('There is no data for export'));
 
-        $this->getPdf()->save($fileName, true);
+        $this->getPdf()->save($fileName);
     }
 }

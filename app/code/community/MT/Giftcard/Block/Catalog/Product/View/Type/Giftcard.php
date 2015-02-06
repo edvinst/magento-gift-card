@@ -30,6 +30,7 @@ class MT_Giftcard_Block_Catalog_Product_View_Type_Giftcard extends Mage_Catalog_
                     'price' => $series->getPrice(),
                     'formatedPrice' => $series->getFormatedPrice(),
                     'oldPrice' => $series->getOldPrice(),
+                    'formatedOldPrice' => $series->getFormatedOldPrice(),
                 );
             }
         }

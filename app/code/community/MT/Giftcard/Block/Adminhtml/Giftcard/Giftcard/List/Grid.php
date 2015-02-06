@@ -11,7 +11,7 @@ class MT_Giftcard_Block_Adminhtml_Giftcard_Giftcard_List_Grid extends Mage_Admin
     public function __construct()
     {
         parent::__construct();
-        $this->setId('giftcard_giftcard_list_grid');
+        $this->setId('giftcard_order_grid');
         $this->setDefaultSort('entity_id');
         $this->setDefaultDir('DESC');
         $this->setSaveParametersInSession(true);
@@ -21,8 +21,8 @@ class MT_Giftcard_Block_Adminhtml_Giftcard_Giftcard_List_Grid extends Mage_Admin
     protected function _prepareCollection()
     {
         if (!$this->__collectionEmpty) {
-            $collection = Mage::getResourceModel('giftcard/giftcard_collection');
             $table = Mage::getSingleton('core/resource')->getTableName('giftcard/series');
+            $collection = Mage::getResourceModel('giftcard/giftcard_collection');
             $collection->getSelect()
                 ->joinLeft(array('t1' => $table), 'main_table.series_id=t1.entity_id', array('series_name' => 't1.name'));
             $this->applyCollectionFilters($collection);

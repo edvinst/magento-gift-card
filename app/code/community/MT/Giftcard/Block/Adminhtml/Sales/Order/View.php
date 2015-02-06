@@ -14,7 +14,7 @@ class MT_Giftcard_Block_Adminhtml_Sales_Order_View
 
         if (count($items) != 0) {
             foreach ($items as $item) {
-                if ($item->getProduct()->getTypeId() == MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT) {
+                if ($item->getProductType()== MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT) {
 
                     $this->_addButton('download_pdf_giftcard', array(
                         'label'     => Mage::helper('sales')->__('Gift Card (.pdf)'),

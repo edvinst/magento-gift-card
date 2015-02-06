@@ -31,13 +31,11 @@ class MT_Giftcard_Model_Series_Action
     {
         if (!is_numeric($productId))
             throw new Exception(Mage::helper('giftcard')->__('Can not assign gift cards to products.'));
-
         $this->unlinkProductsGiftCardSeries($productId);
         if (count($giftCardsSeries) > 0) {
-
             $resource = Mage::getSingleton('core/resource');
-            $table = $resource->getTableName('giftcard/series_product');
             $db = $resource->getConnection('core');
+            $table = $resource->getTableName('giftcard/series_product');
             foreach ($giftCardsSeries as $seriesId => $params) {
                 $db->insert($table, array(
                     'product_id' => $productId,
@@ -55,8 +53,8 @@ class MT_Giftcard_Model_Series_Action
         if (!is_numeric($productId))
             return false;
         $resource = Mage::getSingleton('core/resource');
-        $table = $resource->getTableName('giftcard/series_product');
         $db = $resource->getConnection('core');
+        $table = $resource->getTableName('giftcard/series_product');
         $db->delete($table, array('product_id='.$productId));
         return true;
     }

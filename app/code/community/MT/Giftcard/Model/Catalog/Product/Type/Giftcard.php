@@ -20,7 +20,11 @@ class MT_Giftcard_Model_Catalog_Product_Type_Giftcard extends Mage_Catalog_Model
     protected function _prepareProduct(Varien_Object $buyRequest, $product, $processMode)
     {
         $result = parent::_prepareProduct($buyRequest, $product, $processMode);
+        return $this->addGiftCardOptions($buyRequest, $product, $result);
+    }
 
+    protected function addGiftCardOptions(Varien_Object $buyRequest, $product, $result)
+    {
         $attributes = $buyRequest->getData('giftcard_attribute');
         $options = Mage::getModel('giftcard/option')->getCollection();
         if ($options) {
@@ -43,7 +47,6 @@ class MT_Giftcard_Model_Catalog_Product_Type_Giftcard extends Mage_Catalog_Model
                 }
             }
         }
-
         return $result;
     }
 

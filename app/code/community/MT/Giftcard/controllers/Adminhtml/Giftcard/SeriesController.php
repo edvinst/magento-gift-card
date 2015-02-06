@@ -161,7 +161,7 @@ class MT_Giftcard_Adminhtml_Giftcard_SeriesController extends Mage_Adminhtml_Con
         $this->getResponse()->setBody($this->getLayout()->createBlock('giftcard/adminhtml_giftcard_series_list_grid')->toHtml());
     }
 
-    public function tabGridAction()
+    public function gridGiftCardAction()
     {
         if (!$this->getRequest()->isAjax()) {
             $this->_forward('noRoute');
