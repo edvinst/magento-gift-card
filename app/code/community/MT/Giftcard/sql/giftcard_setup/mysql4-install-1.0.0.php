@@ -12,10 +12,8 @@ $giftCardSeriesProductTable = $installer->getTable('giftcard/series_product');
 $installer->run("
 CREATE TABLE IF NOT EXISTS `{$giftCardTable}` (
 	`entity_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'unique id',
-	`store_id` SMALLINT(5) UNSIGNED NOT NULL,
 	`series_id` INT(5) UNSIGNED NULL DEFAULT NULL,
 	`template_id` INT(5) UNSIGNED NULL DEFAULT NULL,
-	`currency` VARCHAR(4) NOT NULL,
 	`code` VARCHAR(50) NOT NULL COMMENT 'gift card code',
 	`value` DECIMAL(12,4) NOT NULL,
 	`balance` DECIMAL(12,4) NOT NULL,
@@ -38,7 +36,6 @@ $installer->run("
 CREATE TABLE IF NOT EXISTS `{$giftCardSeriesProductTable}` (
 	`giftcard_series_id` INT(11) NULL DEFAULT NULL,
 	`product_id` INT(11) NULL DEFAULT NULL,
-	`giftcard_price` FLOAT UNSIGNED NULL DEFAULT NULL,
 	`position` INT(5) UNSIGNED NULL DEFAULT NULL
 )
 COLLATE='utf8_general_ci'
@@ -62,10 +59,8 @@ AUTO_INCREMENT=0;
 $installer->run("
 CREATE TABLE IF NOT EXISTS `{$giftCardSeriesTable}` (
 	`entity_id` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`store_id` SMALLINT(5) UNSIGNED NOT NULL,
 	`template_id` INT(5) UNSIGNED NOT NULL,
 	`name` VARCHAR(50) NOT NULL,
-	`currency` VARCHAR(4) NOT NULL,
 	`description` TEXT NULL,
 	`value` DECIMAL(12,4) NOT NULL,
 	`lifetime` INT(4) UNSIGNED NOT NULL,
@@ -83,9 +78,8 @@ ENGINE=InnoDB
 AUTO_INCREMENT=0;
 ");
 $installer->run("
-CREATE TABLE IF NOT EXISTS `{$installer->getTable('giftcard/template')}` (
+CREATE TABLE IF NOT EXISTS `{$giftCardTemplateTable}` (
 	`entity_id` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`store_id` INT(5) UNSIGNED NOT NULL,
 	`is_active` INT(1) UNSIGNED NOT NULL DEFAULT '0',
 	`name` VARCHAR(50) NOT NULL,
 	`description` TEXT NOT NULL,
@@ -118,95 +112,14 @@ AUTO_INCREMENT=0;
 
 $installer->run("
 INSERT IGNORE INTO `{$giftCardOptionTable}` (`entity_id`, `name`, `title`, `type`, `source_model`, `is_required`) VALUES (1, 'giftcard_value', 'Gift Card Value', 'select', 'giftcard/option_source_value', 1);
-INSERT IGNORE INTO `{$giftCardOptionTable}` (`entity_id`, `name`, `title`, `type`, `source_model`, `is_required`) VALUES (2, 'giftcard_is_real', 'Get Gift Card by Post', 'checbox', '', 0);
 
-INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `store_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (1, 0, 1, 'Air Balloons', 'Bo Balloons gift card', 'one', 'Gift Card', 'Bo Balloons', '', 0, 0, 0, 0, 0, 0, 'This gift card can be used|for any of our store. |Visit: www.example.com', '#0089bf', '#C4ECF7', '#F25100', '#FFFFFF', '#1C1C1C', '', '', 'background1.jpg', '2015-01-06 13:33:12');
-INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `store_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (2, 0, 1, 'Air Balloon two', '', 'two', 'Gift Card', 'Bo Balloons', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', '#0089bf', '#C4ECF7', '#F25100', '#FFFFFF', '#1C1C1C', '', '', 'background2.jpg', '2015-01-06 15:14:38');
-INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `store_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (3, 0, 1, 'Shoes gift card', '', 'one', 'Gift Card', 'Shoes & More', '', 0, 0, 0, 0, 0, 0, 'This gift card can be used|for any of our Store. |Visit: www.example.com', '5979aa', 'dfbe6d', '', '', '#383838', '', '', 'background3.jpg', '2015-01-06 14:12:42');
-INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `store_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (4, 0, 1, 'Bags & More', '', 'two', 'Gift Card', 'Bags & More', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', 'c21b35', '#FCFCFC', '0371c6', '', '', '', '', 'background4.jpg', '2015-01-06 14:30:50');
+INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (2, 1, 'Air Balloon two', '', 'default', 'Gift Card', 'Bo Balloons', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', '#0089bf', '#C4ECF7', '#F25100', '#FFFFFF', '#1C1C1C', '', '', 'background2.jpg', '2015-01-06 15:14:38');
+INSERT IGNORE INTO `{$giftCardTemplateTable}` (`entity_id`, `is_active`, `name`, `description`, `design`, `title`, `title2`, `title3`, `title_size`, `title2_size`, `title3_size`, `title_y`, `title2_y`, `title3_y`, `note`, `color1`, `color2`, `color3`, `color4`, `color5`, `text1`, `text2`, `image`, `created_at`) VALUES (4, 1, 'Bags & More', '', 'default', 'Gift Card', 'Bags & More', '', 0, 0, 0, 0, 0, 0, 'Note: This gift card can be used for any of our Store. Visit: www.example.com', 'c21b35', '#FCFCFC', '0371c6', '', '', '', '', 'background4.jpg', '2015-01-06 14:30:50');
 
 ");
 
-$attribute = Mage::getModel('catalog/resource_eav_attribute')
-    ->loadByCode('catalog_product','gift_card_type');
-
-if (!$attribute->getId()) {
-    $installer->addAttribute('catalog_product', "gift_card_type", array(
-        'apply_to' => 'giftcard',
-        'type'       => 'varchar',
-        'input'      => 'select',
-        'is_configurable' => 0,
-        'label'      => 'Gift Card Type',
-        'sort_order' => 1,
-        'required'   => false,
-        'user_defined'   => true,
-        'global'     => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
-        'source' => 'giftcard/adminhtml_system_config_source_giftcard_type',
-        // 'note' => 'Template is using to generate .pdf and send giftcard email'
-    ));
-}
-
-$attribute = Mage::getModel('catalog/resource_eav_attribute')
-    ->loadByCode('catalog_product','gift_card_cancel_real');
-
-if (!$attribute->getId()) {
-    $installer->addAttribute('catalog_product', "gift_card_cancel_real", array(
-        'apply_to' => 'giftcard',
-        'type'       => 'int',
-        'input'      => 'boolean',
-        'is_configurable' => 0,
-        'label'      => 'Allow Refuse Real Gift Card',
-        'sort_order' => 1,
-        'required'   => false,
-        'user_defined'   => true,
-        'global'     => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
-        'source' => 'adminhtml/system_config_source_yesno',
-        'note' => 'Allow for mixed type gift cards<br/>'
-    ));
-}
-
-$modelGroup = Mage::getModel('eav/entity_attribute_group');
-$modelGroup->setAttributeGroupName('Gift Cards Options')
-    ->setAttributeSetId($installer->getAttributeSetId('catalog_product', 'default'))
-    ->setSortOrder(2);
-
-if (!$modelGroup->itemExists())
-    $modelGroup->save();
-
-
-$attributesToSet = array(
-
-    array(
-        'attribute_code' => 'gift_card_type',
-        'group' => 'Gift Cards Options',
-        'attribute_set' => 'default',
-        'order' => '0'
-    ),
-
-    array(
-        'attribute_code' => 'gift_card_cancel_real',
-        'group' => 'Gift Cards Options',
-        'attribute_set' => 'default',
-        'order' => '4'
-    ),
-
-);
-
-foreach ($attributesToSet as $attribute) {
-
-    $attributeSetId = $installer->getAttributeSetId('catalog_product', $attribute['attribute_set']);
-    $attributeGroupId = $installer->getAttributeGroupId('catalog_product', $attributeSetId, $attribute['group']);
-    $attributeId = $installer->getAttributeId('catalog_product', $attribute['attribute_code']);
-    $installer->addAttributeToSet('catalog_product', $attributeSetId, $attributeGroupId, $attributeId, $attribute['order']);
-}
-
-//add price attributes
-
 $attributes = array(
     'price',
-    'special_price',
-    'special_from_date',
-    'special_to_date',
     'minimal_price',
     'tax_class_id',
     'group_price'
