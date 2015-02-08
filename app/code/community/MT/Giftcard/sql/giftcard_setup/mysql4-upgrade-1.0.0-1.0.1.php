@@ -1,9 +1,6 @@
 <?php
-/* @var $installer Mage_Catalog_Model_Resource_Eav_Mysql4_Setup */
-$installer = $this;
+$installer = Mage::getResourceModel('sales/setup', 'default_setup');
 $installer->startSetup();
-
-$installer = new Mage_Sales_Model_Resource_Setup('core_setup');
 
 $installer->addAttribute('order','mt_gift_card',array(
     'label' => 'Gift Cards',

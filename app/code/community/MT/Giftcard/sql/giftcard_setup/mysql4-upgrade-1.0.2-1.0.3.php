@@ -1,8 +1,5 @@
 <?php
-/* @var $installer Mage_Catalog_Model_Resource_Eav_Mysql4_Setup */
-
 $installer = Mage::getResourceModel('sales/setup', 'default_setup');
-
 $installer->startSetup();
 
 $installer->addAttribute('order', 'forced_can_creditmemo', array(
