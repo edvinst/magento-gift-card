@@ -132,4 +132,15 @@ class MT_Giftcard_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getBaseDir('media') . DS.'mt'. DS .'giftcard'. DS.'template'. DS;
     }
 
+    public function isAjax()
+    {
+        $request = Mage::app()->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            return true;
+        }
+        if ($request->getParam('ajax') || $request->getParam('isAjax')) {
+            return true;
+        }
+        return false;
+    }
 }

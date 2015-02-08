@@ -35,7 +35,6 @@ class MT_Giftcard_Model_Giftcard extends Mage_Core_Model_Abstract
     public function codeExist($code)
     {
         $collection = $this->getCollection()
-            ->addFieldToSelect('entity_id')
             ->addFieldToFilter('code', $code)
             ->setPageSize(1);
         return $collection->count() == 1;
@@ -74,7 +73,6 @@ class MT_Giftcard_Model_Giftcard extends Mage_Core_Model_Abstract
             return false;
 
         $collection = $this->getCollection()
-            ->addFieldToSelect('entity_id')
             ->addFieldToFilter('code', $code)
             ->addFieldToFilter('status', self::STATUS_SOLD)
             ->setPageSize(1);
@@ -88,7 +86,6 @@ class MT_Giftcard_Model_Giftcard extends Mage_Core_Model_Abstract
             return $this;
 
         $collection = $this->getCollection()
-            ->addFieldToSelect('entity_id')
             ->addFieldToFilter('code', $code)
             ->setPageSize(1);
         if ($collection->count() == 0)

@@ -48,8 +48,7 @@ class MT_Giftcard_Model_Giftcard_Action
     public function exportGiftCardsCodes($giftCardIds, $format)
     {
         $collection = Mage::getModel('giftcard/giftcard')->getCollection()
-            ->addFieldToFilter('entity_id', array('in' => $giftCardIds))
-            ->addFieldToSelect('code');
+            ->addFieldToFilter('entity_id', array('in' => $giftCardIds));
 
         switch ($format) {
             case 'xlsx':
@@ -82,8 +81,7 @@ class MT_Giftcard_Model_Giftcard_Action
 
         foreach ($items as $item) {
 
-            $product = $item->getProduct();
-            if ($product->getTypeId() != MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT)
+            if ($item->getProductType() != MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT)
                 continue;
 
             $option = $item->getProductOptions();

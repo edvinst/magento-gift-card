@@ -150,7 +150,7 @@ class MT_Giftcard_Adminhtml_Giftcard_SeriesController extends Mage_Adminhtml_Con
 
     public function gridAction()
     {
-        if (!$this->getRequest()->isAjax()) {
+        if (!Mage::helper('giftcard')->isAjax()) {
             $this->_forward('noRoute');
             return;
         }
@@ -163,7 +163,7 @@ class MT_Giftcard_Adminhtml_Giftcard_SeriesController extends Mage_Adminhtml_Con
 
     public function gridGiftCardAction()
     {
-        if (!$this->getRequest()->isAjax()) {
+        if (!Mage::helper('giftcard')->isAjax()) {
             $this->_forward('noRoute');
             return;
         }
@@ -172,5 +172,4 @@ class MT_Giftcard_Adminhtml_Giftcard_SeriesController extends Mage_Adminhtml_Con
 
         $this->getResponse()->setBody($this->getLayout()->createBlock('giftcard/adminhtml_giftcard_series_edit_tabs_generate_grid')->toHtml());
     }
-
 }

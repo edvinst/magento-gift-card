@@ -14,7 +14,7 @@ class MT_Giftcard_Adminhtml_Giftcard_TemplateController extends Mage_Adminhtml_C
 
     public function gridAction()
     {
-        if (!$this->getRequest()->isAjax()) {
+        if (!Mage::helper('giftcard')->isAjax()) {
             $this->_forward('noRoute');
             return;
         }
@@ -253,7 +253,7 @@ class MT_Giftcard_Adminhtml_Giftcard_TemplateController extends Mage_Adminhtml_C
             $fields = $design->getAdditionalFields();
             foreach ($fields as $field) {
                 if (isset($params[$field[0]]))
-                    $template->setData($field[2]['index'], $params[$field[0]]);
+                    $template->setData($field[2]['index'], urldecode($params[$field[0]]));
                 else
                     $template->setData($field[2]['index'], '');
             }

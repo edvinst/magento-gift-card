@@ -6,8 +6,7 @@ class MT_Giftcard_Block_Sales_Order_Print_Item_Renderer_Giftcard
     public function getItemOptions()
     {
         $result = parent::getItemOptions();
-        $product = $this->getItem()->getProduct();
-        if ($product->getTypeId() == MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT) {
+        if ($this->getItem()->getProductType() == MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT) {
             $giftCardValue = '';
             $giftCardCollection = Mage::getModel('giftcard/giftcard')->getCollection()
                 ->addFieldToFilter('order_item_id', $this->getItem()->getId());

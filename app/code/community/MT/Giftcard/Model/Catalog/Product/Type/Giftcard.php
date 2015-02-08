@@ -4,6 +4,11 @@ class MT_Giftcard_Model_Catalog_Product_Type_Giftcard extends Mage_Catalog_Model
 {
     protected  $_canConfigure = true;
 
+    public function hasRequiredOptions($product = null)
+    {
+        return true;
+    }
+
     public function hasOptions($product = null)
     {
         return true;
@@ -81,7 +86,7 @@ class MT_Giftcard_Model_Catalog_Product_Type_Giftcard extends Mage_Catalog_Model
 
         $seriesCollection = Mage::getModel('giftcard/series')
             ->getCollectionByProduct($product->getId(), true);
-        $seriesCollection->addFieldToSelect('entity_id');
+
 
         $in = array();
         if ($seriesCollection->count() > 0) {

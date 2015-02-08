@@ -27,6 +27,11 @@
 }
 
 /*checkout*/
+
+.sp-methods #checkout-payment-method-gift-card ul.form-list {
+    padding-left: 0;
+}
+
 .gc-cart-action {
     padding: 5px 0 10px;
     height: auto;

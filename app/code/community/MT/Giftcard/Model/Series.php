@@ -141,8 +141,7 @@ class MT_Giftcard_Model_Series extends Mage_Core_Model_Abstract
 
         $giftCardCollection = Mage::getModel('giftcard/giftcard')->getCollection()
             ->addFieldToFilter('series_id', array('in' => $in))
-            ->addFieldToFilter('status', MT_Giftcard_Model_Giftcard::STATUS_ACTIVE)
-            ->addFieldToSelect('series_id');
+            ->addFieldToFilter('status', MT_Giftcard_Model_Giftcard::STATUS_ACTIVE);
         $giftCardCollection->getSelect()->group('series_id');
 
         $availableSeries = array();

@@ -100,9 +100,9 @@ class MT_Giftcard_Checkout_CartController
 
                 if ($codeLength) {
                     if ($isCodeLengthValid && $helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode)) {
-                        $success = $this->__('Gift card "%s" was added.', Mage::helper('core')->escapeHtml($giftCardCode));
+                        $success = $this->__('Gift card "%s" was applied.', $giftCardCode);
                     } else {
-                        $error = $this->__('Gift card "%s" is not valid.', Mage::helper('core')->escapeHtml($giftCardCode));
+                        $error = $this->__('Gift card "%s" is not valid.', $giftCardCode);
                     }
                 } else {
                     $error = $this->__('Gift card was canceled.');
