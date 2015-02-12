@@ -2,7 +2,7 @@
 <config>
     <modules>
         <MT_Giftcard>
-            <version>1.0.4</version>
+            <version>1.0.14</version>
         </MT_Giftcard>
     </modules>
     <global>
