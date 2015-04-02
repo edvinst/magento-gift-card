@@ -1,4 +1,3 @@
-
 var GiftCardCheckout = {
 
     config: {},
@@ -8,8 +7,22 @@ var GiftCardCheckout = {
         GiftCardCheckout.config = config;
         GiftCardCheckout.updateEvents();
         payment.addAfterInitFunction('giftcard', function(){
+            GiftCardCheckout.initEvents();
             GiftCardCheckout.updateEvents();
             GiftCardCheckout.endLoading();
+        });
+    },
+
+    initEvents: function()
+    {
+        jQuery('#p_method_giftcard').click(function(){
+            if (jQuery(this).is(':checked'))
+                jQuery('.gc-form-element').show();
+            else {
+                jQuery('.gc-form-element').hide();
+                GiftCardCheckout.clearGiftCardCode();
+                jQuery('input[name="apply_gift_card[]"]').removeAttr('checked');
+            }
         });
     },
 
@@ -22,7 +35,7 @@ var GiftCardCheckout = {
         jQuery('#gc-please-wait').show();
 
         var formVisible = 0;
-        if (jQuery('#p_method_gift_card').is(':checked'))
+        if (jQuery('#p_method_giftcard').is(':checked'))
             formVisible = 1;
 
         jQuery.post(GiftCardCheckout.config.requestUrl+'addGiftCardCodeAjax', {
@@ -68,16 +81,6 @@ var GiftCardCheckout = {
 
     updateEvents :function()
     {
-        jQuery('#p_method_gift_card').click(function(){
-            if (jQuery(this).is(':checked'))
-                jQuery('.gc-form-element').show();
-            else {
-                jQuery('.gc-form-element').hide();
-                GiftCardCheckout.clearGiftCardCode();
-                jQuery('input[name="apply_gift_card[]"]').removeAttr('checked');
-            }
-        });
-
         jQuery('input[name="apply_gift_card[]"]').click(function(){
             if (jQuery(this).is(':checked')) {
                 GiftCardCheckout.addGiftCardCode(jQuery(this).val());
@@ -92,7 +95,7 @@ var GiftCardCheckout = {
         jQuery('#gc-please-wait').show();
         jQuery('.gc-cart-action button').attr('disabled', 'disabled');
         jQuery('input[name="apply_gift_card[]"]').attr('disabled', 'disabled');
-        jQuery('#p_method_gift_card').attr('disabled', 'disabled');
+        jQuery('#p_method_giftcard').attr('disabled', 'disabled');
         jQuery('#gift_card_code').attr('disabled', 'disabled');
     },
 
@@ -101,7 +104,7 @@ var GiftCardCheckout = {
         jQuery('#gc-please-wait').hide();
         jQuery('.gc-cart-action button').removeAttr('disabled');
         jQuery('input[name="apply_gift_card[]"]').removeAttr('disabled');
-        jQuery('#p_method_gift_card').removeAttr('disabled');
+        jQuery('#p_method_giftcard').removeAttr('disabled');
         jQuery('#gift_card_code').removeAttr('disabled');
     }
 };

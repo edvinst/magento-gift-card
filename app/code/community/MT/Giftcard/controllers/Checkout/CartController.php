@@ -23,7 +23,7 @@ class MT_Giftcard_Checkout_CartController
             $error = $this->__('Cannot delete the gift cards.');
         }
 
-        $content = $this->getLayout()->createBlock('giftcard/checkout_payment_giftcard_form','checkout_payment_giftcard_form',array(
+        $content = $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard','payment_giftcard_form_giftcard',array(
             'error' => $error,
             'success' => $success,
         ))->renderView();
@@ -59,7 +59,7 @@ class MT_Giftcard_Checkout_CartController
             }
         }
 
-        $content = $this->getLayout()->createBlock('giftcard/checkout_payment_giftcard_form','checkout_payment_giftcard_form',array(
+        $content = $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard','payment_giftcard_form_giftcard',array(
             'error' => $error,
             'success' => $success,
         ))->renderView();
@@ -116,7 +116,7 @@ class MT_Giftcard_Checkout_CartController
             }
         }
 
-        $content = $this->getLayout()->createBlock('giftcard/checkout_payment_giftcard_form','checkout_payment_giftcard_form',array(
+        $content = $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard','payment_giftcard_form_giftcard',array(
             'error' => $error,
             'success' => $success,
         ))->renderView();
@@ -171,7 +171,7 @@ class MT_Giftcard_Checkout_CartController
                 Mage::logException($e);
             }
         }
-        $response = $this->getLayout()->createBlock('giftcard/checkout_payment_giftcard_form','checkout_payment_giftcard_form',array(
+        $response = $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard','payment_giftcard_form_giftcard',array(
             'error' => $error,
         ))->renderView();
 

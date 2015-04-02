@@ -325,6 +325,13 @@
     </admin>
 
     <default>
+        <payment>
+            <giftcard>
+                <active>0</active>
+                <model>giftcard/payment_giftcard</model>
+                <title>Use Gift Card to check out</title>
+            </giftcard>
+        </payment>
         <giftcard>
             <general>
                 <is_active>0</is_active>

@@ -1,13 +1,7 @@
-<?php if ($this->isActive()): ?>
-
-<?php $formVisible = $this->isFormVisible();?>
+<?php $formVisible = Mage::helper('giftcard')->isPaymentMethodFormVisible();?>
 <div id="checkout-payment-method-gift-card">
     <ul class="form-list">
-        <li class="control"> <input <?php if ($formVisible): ?>checked="checked"<?php endif;?> id="p_method_gift_card" class="checkbox" type="checkbox" onclick="payment.switchMethod('cashondelivery')" title="<?php echo $this->__('Use Gift Card to check out');?>" name="apply_gift_card" value="1"/>
-            <label for="p_method_gift_card"><?php echo $this->__('Use Gift Card to check out');?></label>
-        </li>
-
-        <?php $giftCardCollection = $this->getAppliedGiftCardCollection();?>
+        <?php $giftCardCollection = Mage::helper('giftcard')->getAppliedGiftCardCollection();?>
         <?php if (count($giftCardCollection) > 0): ?>
             <?php foreach ($giftCardCollection as $key => $giftCard): ?>
                 <li class="control gc-form-element">
@@ -35,7 +29,7 @@
                                         <?php echo $this->__('Please wait...'); ?>
                                     </div>
                                     <?php if ($error = $this->getError()): ?>
-                                    <div id="gc-applied-codes-error"><?php echo $error;?></div>
+                                        <div id="gc-applied-codes-error"><?php echo $error;?></div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -46,11 +40,3 @@
         </li>
     </ul>
 </div>
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-        GiftCardCheckout.init({
-            'requestUrl': '<?php echo $this->getControllerUrl(); ?>'
-        });
-    });
-</script>
-<?php endif; ?>

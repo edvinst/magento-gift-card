@@ -1,0 +1,16 @@
+<?php $formVisible = Mage::helper('giftcard')->isPaymentMethodFormVisible();?>
+<script type="text/javascript">
+    var paymentElement = $('p_method_giftcard');
+    paymentElement.setAttribute('type', 'checkbox');
+    paymentElement.setAttribute('name', 'apply_gift_card');
+    paymentElement.setAttribute('value', '1');
+    paymentElement.removeAttribute('onclick');
+    <?php if ($formVisible): ?>
+    paymentElement.setAttribute('checked', 'checked');
+    <?php endif;?>
+
+    GiftCardCheckout.init({
+        'requestUrl': '<?php echo $this->getControllerUrl(); ?>'
+    });
+</script>
+<?php echo $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard')->toHtml(); ?>

@@ -2,6 +2,12 @@
 
 <layout version="0.1.0">
 
+    <default>
+        <reference name="methods">
+
+        </reference>
+    </default>
+
     <PRODUCT_TYPE_giftcard translate="label" module="catalog">
         <label>Catalog Product View (Gift Card)</label>
         <reference name="head">
@@ -27,14 +33,6 @@
             </block>
         </reference-->
     </checkout_onepage_index>
-
-    <checkout_onepage_paymentmethod>
-        <reference name="root">
-            <block type="giftcard/checkout_payment_giftcard" name="checkout.payment.methods.giftcard" as="additional" before="-">
-                <block type="giftcard/checkout_payment_giftcard_form" name="checkout.payment.methods.form" as="additional"/>
-            </block>
-        </reference>
-    </checkout_onepage_paymentmethod>
 
     <checkout_cart_index>
         <reference name="head">

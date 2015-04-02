@@ -143,4 +143,19 @@ class MT_Giftcard_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return false;
     }
+
+    public function isPaymentMethodFormVisible()
+    {
+        if (Mage::app()->getRequest()->getParam('is_form_visible') == 0
+            && count($this->getAppliedGiftCardCollection()) == 0
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getAppliedGiftCardCollection()
+    {
+        return Mage::getSingleton('giftcard/checkout_giftcard')->getQuoteGiftCardCollection();
+    }
 }
