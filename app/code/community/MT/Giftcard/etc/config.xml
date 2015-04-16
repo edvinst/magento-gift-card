@@ -327,9 +327,10 @@
     <default>
         <payment>
             <giftcard>
-                <active>0</active>
+                <active>1</active>
                 <model>giftcard/payment_giftcard</model>
                 <title>Use Gift Card to check out</title>
+                <sort_order>900</sort_order>
             </giftcard>
         </payment>
         <giftcard>

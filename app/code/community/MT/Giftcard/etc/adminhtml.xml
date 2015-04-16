@@ -37,15 +37,34 @@
                             <config>
                                 <children>
                                     <giftcard translate="title" module="giftcard">
-                                        <title></title>
+                                        <title>Gift Card</title>
                                         <sort_order>60</sort_order>
                                     </giftcard>
                                 </children>
                             </config>
                         </children>
                     </system>
+                    <giftcard translate="title" module="giftcard">
+                        <title>Gift Card</title>
+                        <sort_order>60</sort_order>
+                        <children>
+                            <giftcard>
+                                <title>Manage Gift Cards</title>
+                            </giftcard>
+                            <series>
+                                <title>Gift Cards Series</title>
+                            </series>
+                            <template>
+                                <title>Gift Cards Templates</title>
+                            </template>
+                            <settings>
+                                <title>Settings</title>
+                            </settings>
+                        </children>
+                    </giftcard>
                 </children>
             </admin>
         </resources>
+
     </acl>
  </config>
