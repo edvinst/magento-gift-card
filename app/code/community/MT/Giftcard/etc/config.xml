@@ -124,6 +124,15 @@
 
                 </observers>
             </sales_order_place_after>
+			<sales_order_invoice_save_after>
+                <observers>
+                    <active_gift_card>
+                        <type>singleton</type>
+                        <class>MT_Giftcard_Model_Observer</class>
+                        <method>activeGiftCard</method>
+                    </active_gift_card>
+                </observers>
+            </sales_order_invoice_save_after>
 
         </events>
         <sales>
