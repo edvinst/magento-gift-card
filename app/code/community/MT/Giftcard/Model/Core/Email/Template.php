@@ -39,12 +39,30 @@ class MT_Giftcard_Model_Core_Email_Template extends MT_Giftcard_Model_Core_Email
                     throw new Exception(Mage::helper('giftcard')->__('Can not to create file'));
 
                 $content = file_get_contents($contentFile['value']);
-                $attachment = new Zend_Mime_Part($content);
-                $attachment->type = 'application/pdf';
-                $attachment->disposition = Zend_Mime::DISPOSITION_ATTACHMENT;
-                $attachment->encoding = Zend_Mime::ENCODING_BASE64;
-                $attachment->filename = Mage::helper('giftcard')->__('gif_card_').$order->getIncrementId().'.pdf';
-                $this->getMail()->addAttachment($attachment);
+                $type = 'application/pdf';
+                $disposition = Zend_Mime::DISPOSITION_ATTACHMENT;
+                $encoding = Zend_Mime::ENCODING_BASE64;
+                $fileName = Mage::helper('giftcard')->__('gif_card_').$order->getIncrementId().'.pdf';
+
+                switch (get_class($this->getMail())) {
+                    case 'Mandrill_Message':
+                        $this->getMail()->createAttachment(
+                            $content,
+                            $type,
+                            $disposition,
+                            $encoding,
+                            $fileName
+                        );
+                        break;
+                    default:
+                        $attachment = new Zend_Mime_Part($content);
+                        $attachment->type = $type;
+                        $attachment->disposition = $disposition;
+                        $attachment->encoding = $encoding;
+                        $attachment->filename = $fileName;
+                        $this->getMail()->addAttachment($attachment);
+                        break;
+                }
 
                 //delete pdf file from server
                 if ($contentFile['rm'] == 1) {
