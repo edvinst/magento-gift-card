@@ -1,7 +1,7 @@
 <?php
 
-class MT_Giftcard_Block_Adminhtml_Sales_Total_Giftcard
-    extends Mage_Core_Block_Abstract
+class MT_Giftcard_Block_Sales_Order_Creditmemo_Totals_Giftcard
+    extends Mage_Sales_Block_Order_Creditmemo_Totals
 {
     public function initTotals()
     {
@@ -10,11 +10,11 @@ class MT_Giftcard_Block_Adminhtml_Sales_Total_Giftcard
         $value = $order->getMtGiftCardTotal();
         if ($value < 0) {
             $collection = Mage::getModel('giftcard/order')->getCollectionByOrderId($order->getId());
-            foreach ($collection as $item) {
-                if ($item->getDiscount() == 0) {
-                    continue;
-                }
 
+
+            foreach ($collection as $item) {
+                if ($item->getDiscount() == 0)
+                    continue;
                 $totalDiscounted = new Varien_Object(array(
                     'code'  => 'mt_gift_card_total_discount_'.$item->getId(),
                     'value' => -$item->getDiscount(),
@@ -36,6 +36,7 @@ class MT_Giftcard_Block_Adminhtml_Sales_Total_Giftcard
                 $parent->addTotal($totalRefunded, 'mt_gift_card_total_refund_'.$item->getId());
             }
         }
+
         return $this;
     }
 }

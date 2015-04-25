@@ -85,7 +85,7 @@
     <adminhtml_sales_order_creditmemo_view>
 
         <reference name="creditmemo_totals">
-            <block type="giftcard/adminhtml_sales_creditmemo_view_total_giftcard" name="gift_card_totals"  />
+            <block type="giftcard/adminhtml_sales_total_giftcard" name="gift_card_totals"  />
         </reference>
 
         <reference name="creditmemo_items">
@@ -109,7 +109,7 @@
     <adminhtml_sales_order_invoice_new>
 
         <reference name="invoice_totals">
-            <block type="giftcard/adminhtml_sales_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+            <block type="giftcard/adminhtml_sales_invoice_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
         </reference>
 
         <reference name="order_items">
@@ -136,7 +136,7 @@
         </reference>
 
         <reference name="invoice_totals">
-            <block type="giftcard/adminhtml_sales_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
+            <block type="giftcard/adminhtml_sales_invoice_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
         </reference>
 
     </adminhtml_sales_order_invoice_view>
@@ -153,36 +153,5 @@
             <action method="addColumnRender"><column>name</column><block>giftcard/adminhtml_sales_items_column_name_giftcard</block><template>sales/items/column/name.phtml</template><type>giftcard</type></action>
         </reference>
     </adminhtml_sales_order_shipment_view>
-
-  <!--adminhtml_sales_order_creditmemo_new>
-        <reference name="creditmemo_totals">
-            <block type="giftcard/adminhtml_sales_creditmemo_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
-        </reference>
-    </adminhtml_sales_order_creditmemo_new>
-
-    <adminhtml_sales_order_creditmemo_view>
-        <reference name="creditmemo_totals">
-            <block type="giftcard/adminhtml_sales_creditmemo_total_giftcard" name="total_gift_card_total" as="gift_card_total"/>
-        </reference>
-    </adminhtml_sales_order_creditmemo_view-->
-
-    <!--adminhtml_catalog_product_new>
-        <reference name="product_tabs">
-            <action method="addTab">
-                <name>gift_card</name>
-                <block>giftcard/adminhtml_catalog_product_edit_tab</block>
-            </action>
-        </reference>
-    </adminhtml_catalog_product_new-->
-
-    <!--adminhtml_catalog_product_edit>
-        <reference name="product_tabs">
-            <action method="addTab">
-                <name>gift_card</name>
-                <block>giftcard/adminhtml_catalog_product_edit_tab</block>
-            </action>
-        </reference>
-    </adminhtml_catalog_product_edit-->
-
 
 </layout>

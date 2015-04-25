@@ -32,8 +32,13 @@ class MT_Giftcard_Model_Core_Email_Template extends MT_Giftcard_Model_Core_Email
                 if ($collection->count() <= 0) {
                     return;
                 }
+
                 $contentFile = Mage::getSingleton('giftcard/giftcard_action')
                     ->exportOrderGiftCard($order->getId(), 'pdf');
+
+                if (!$contentFile)  {
+                    return false;
+                }
 
                 if (!file_exists($contentFile['value']))
                     throw new Exception(Mage::helper('giftcard')->__('Can not to create file'));
@@ -71,6 +76,6 @@ class MT_Giftcard_Model_Core_Email_Template extends MT_Giftcard_Model_Core_Email
             }
         }
 
-        return;
+        return true;
     }
 }

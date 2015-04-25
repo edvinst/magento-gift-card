@@ -5,6 +5,4 @@ class MT_Giftcard_Model_Resource_Series_Collection extends Mage_Core_Model_Mysql
     {
         $this->_init('giftcard/series');
     }
-
-
 }

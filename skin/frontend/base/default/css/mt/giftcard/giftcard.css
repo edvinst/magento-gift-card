@@ -25,7 +25,9 @@
 .gc .gc-applied-gift-cards {
     padding-top: 10px;
 }
-
+.gc-applied-gift-cards span.price {
+    display: inline-block;
+}
 /*checkout*/
 
 .sp-methods #checkout-payment-method-gift-card ul.form-list {

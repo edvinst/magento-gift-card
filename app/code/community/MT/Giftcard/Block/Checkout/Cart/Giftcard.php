@@ -7,16 +7,8 @@ class MT_Giftcard_Block_Checkout_Cart_Giftcard
 
     public function getAppliedGiftCards()
     {
-        if ($this->__appliedGiftCardCollection == null) {
-            $quote = Mage::getSingleton('checkout/cart')->getQuote();
-            $giftCardsCodes = Mage::helper('giftcard')->getGiftCardCodeArray($quote->getMtGiftCard());
-            if (count($giftCardsCodes) > 0) {
-                $giftCardCollection = Mage::getModel('giftcard/giftcard')->getCollection();
-                $giftCardCollection->addFieldToFilter('code', array('in' => $giftCardsCodes));
-                $this->__appliedGiftCardCollection = $giftCardCollection;
-            }
-        }
-        return $this->__appliedGiftCardCollection;
+        $quoteId = Mage::getSingleton('checkout/cart')->getQuote()->getId();
+        return Mage::getSingleton('giftcard/quote')->getGiftCardCollection($quoteId);
     }
 
     public function getAmount()
@@ -37,21 +29,17 @@ class MT_Giftcard_Block_Checkout_Cart_Giftcard
         return $total;
     }
 
-    public function isVisible()
+    public function isActive()
     {
-        if (!Mage::helper('giftcard')->isActive() || !Mage::getStoreConfig('giftcard/cart/form_in_cart'))
+        $helper = Mage::helper('giftcard');
+        if (!$helper->isActive() || !Mage::getStoreConfig('giftcard/cart/form_in_cart'))
             return false;
 
-        $cart = Mage::getModel('checkout/cart')->getQuote();
-        $items = $cart->getAllItems();
-        if (count($items) == 0)
-            return false;
+        return Mage::helper('giftcard')->hasGiftCardProductInCart() == false;
+    }
 
-        foreach ($items as $item) {
-            if ($item->getProduct()->getTypeId() == MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT)
-                return false;
-        }
-
-        return true;
+    public function getStatusCheckUrl()
+    {
+        return Mage::getUrl('giftcard/giftcard/status');
     }
 }

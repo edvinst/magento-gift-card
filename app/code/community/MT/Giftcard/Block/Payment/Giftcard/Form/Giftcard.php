@@ -21,8 +21,11 @@ class MT_Giftcard_Block_Payment_Giftcard_Form_Giftcard
 
     public function getAppliedGiftCardCollection()
     {
-        return Mage::getSingleton('giftcard/checkout_giftcard')->getQuoteGiftCardCollection();
+        $quoteId = Mage::getSingleton('checkout/cart')->getQuote()->getId();
+        return Mage::getSingleton('giftcard/quote')->getGiftCardCollection($quoteId);
     }
+
+
 
     public function getAction()
     {

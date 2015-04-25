@@ -22,8 +22,6 @@ class MT_Giftcard_Model_Giftcard extends Mage_Core_Model_Abstract
 
     const GIFT_CARD_CODE_MAX_LENGTH = 255;
 
-#    const TYPE_VIRTUAL_REAL = 'virtual-real';
-
     const TYPE_VIRTUAL = 'virtual';
 
 
@@ -94,16 +92,6 @@ class MT_Giftcard_Model_Giftcard extends Mage_Core_Model_Abstract
         return parent::load($collection->getFirstItem()->getId());
     }
 
-    public function getFormatedBalance()
-    {
-        $balance = Mage::getModel('directory/currency')->format($this->getBalance(), array(
-            'precision' => 2,
-            'currency' => Mage::app()->getStore($this->getStoreId())->getCurrentCurrencyCode()
-        ), false);
-
-        return $balance;
-    }
-
     public function getFormatedValue()
     {
         $value = Mage::getModel('directory/currency')->format($this->getValue(), array(
@@ -127,4 +115,89 @@ class MT_Giftcard_Model_Giftcard extends Mage_Core_Model_Abstract
         return $template;
     }
 
+    public function getBalance($currencyCode = '')
+    {
+        $balance = $this->getData('balance');
+        $giftCardCurrency = $this->getCurrency();
+        if (empty($currencyCode) || $currencyCode == $giftCardCurrency) {
+            return $balance;
+        }
+
+        $convertedBalance = Mage::helper('directory')->currencyConvert(
+            $balance,
+            $giftCardCurrency,
+            $currencyCode
+        );
+        $convertedBalance = number_format($convertedBalance, 2);
+
+        return $convertedBalance;
+    }
+
+    public function setBalance($balance, $currencyCode = '')
+    {
+        if ($currencyCode == '') {
+            return $this->setData('balance', $balance);
+        }
+        $giftCardCurrency = $this->getCurrency();
+        if ($currencyCode != $giftCardCurrency) {
+            $balance = Mage::helper('directory')->currencyConvert(
+                $balance,
+                $currencyCode,
+                $giftCardCurrency
+            );
+            $balance = number_format($balance, 2);
+        }
+
+        return $this->setData('balance', $balance);
+    }
+
+    public function getFormatedBalance($currencyCode = '')
+    {
+        if (empty($currencyCode)) {
+            $currencyCode = $this->getCurrency();
+        }
+        $balance = $this->getBalance($currencyCode);
+
+        $formatedBalance = Mage::getModel('directory/currency')->format(
+            $balance,
+            array(
+                'precision' => 2,
+                'currency' =>  $currencyCode
+            ), false);
+
+        return $formatedBalance;
+    }
+
+    public function isSold()
+    {
+        return $this->getStatus() == self::STATUS_SOLD;
+    }
+
+    public function discount($balance, $currency)
+    {
+        $this->setBalance($balance, $currency);
+        if ($balance <= 0) {
+            $this->setStatus(MT_Giftcard_Model_Giftcard::STATUS_INACTIVE);
+        }
+        $this->save();
+    }
+
+    public function refund($refund, $currency)
+    {
+        $giftCardBalance = $this->getBalance($currency);
+        if (
+            $this->getStatus() == MT_Giftcard_Model_Giftcard::STATUS_INACTIVE
+            && $giftCardBalance == 0
+        ) {
+            $this->setStatus(MT_Giftcard_Model_Giftcard::STATUS_SOLD);
+        }
+        $returnAmount = ($giftCardBalance+$refund);
+        $this->setBalance($returnAmount, $currency);
+        $this->save();
+    }
+
+    public function getCurrency($code = '')
+    {
+        return Mage::app()->getStore()->getBaseCurrencyCode();
+    }
 }

@@ -9,13 +9,11 @@ class MT_Giftcard_Checkout_CartController
         $error = false;
         $success = false;
         try {
-            $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-            $this->_getQuote()->setMtGiftCard('')
-                ->collectTotals()
-                ->save();
+            $quoteId = $this->_getQuote()->getId();
+            $giftCardQuote = Mage::getModel('giftcard/quote');
 
-            if ($this->_getQuote()->getMtGiftCard() == '') {
-                $success = $this->__('Gift cards was deleted.');
+            if ($giftCardQuote->removeAllGiftCardFromQuote($quoteId)) {
+                $success = $this->__('Gift cards was removed.');
             }
         } catch (Mage_Core_Exception $e) {
             $error = $e->getMessage();
@@ -35,22 +33,16 @@ class MT_Giftcard_Checkout_CartController
 
     public function removeGiftCardCodeAjaxAction()
     {
-        $removeCode = $this->getRequest()->getParam('giftcard_code');
+        $giftCardCode = $this->getRequest()->getParam('giftcard_code');
         $error = false;
         $success = false;
 
-        if (!empty($removeCode)) {
-            $helper = Mage::helper('giftcard');
-            $giftCardCodes = $helper->removeQuoteGiftCardCodes($this->_getQuote()->getMtGiftCard(), array($removeCode));
-
+        if (!empty($giftCardCode)) {
             try {
-                $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-                $this->_getQuote()->setMtGiftCard($giftCardCodes)
-                    ->collectTotals()
-                    ->save();
-
-                if ($this->_getQuote()->getMtGiftCard() == $giftCardCodes) {
-                    $success = $this->__('Gift cards was deleted.');
+                $quoteId = $this->_getQuote()->getId();
+                $giftCardQuote = Mage::getModel('giftcard/quote');
+                if ($giftCardQuote->removeGiftCardByCode($quoteId, $giftCardCode)) {
+                    $success = $this->__('Gift cards was removed.');
                 }
             } catch (Mage_Core_Exception $e) {
                 $error = $e->getMessage();
@@ -69,7 +61,6 @@ class MT_Giftcard_Checkout_CartController
         )));
     }
 
-
     public function addGiftCardCodeAjaxAction()
     {
         $error = false;
@@ -77,37 +68,12 @@ class MT_Giftcard_Checkout_CartController
 
         if ($this->_getCart()->getQuote()->getItemsCount()) {
             $giftCardCode = (string) $this->getRequest()->getParam('giftcard_code');
-            $helper = Mage::helper('giftcard');
             try {
-                $codeLength = strlen($giftCardCode);
-                $isCodeLengthValid = $codeLength && $codeLength <= MT_Giftcard_Model_Giftcard::GIFT_CARD_CODE_MAX_LENGTH;
-
-                if (!Mage::getModel('giftcard/giftcard')->isCodeActive($giftCardCode))
-                    throw new Mage_Core_Exception($helper->__('Bad gift card code.'));
-
-
-                if ($helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode))
-                    throw new Mage_Core_Exception($helper->__('This gift card already added.'));
-
-                $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-                $this->_getQuote()->setMtGiftCard(
-                    $helper->prepareQuoteGiftCard(
-                        $this->_getQuote()->getMtGiftCard(),
-                        $isCodeLengthValid ? $giftCardCode : ''
-                    ))
-                    ->collectTotals()
-                    ->save();
-
-                if ($codeLength) {
-                    if ($isCodeLengthValid && $helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode)) {
-                        $success = $this->__('Gift card "%s" was applied.', $giftCardCode);
-                    } else {
-                        $error = $this->__('Gift card "%s" is not valid.', $giftCardCode);
-                    }
-                } else {
-                    $error = $this->__('Gift card was canceled.');
+                $quoteId = $this->_getQuote()->getId();
+                $giftCardQuote = Mage::getModel('giftcard/quote');
+                if (!$giftCardQuote->addGiftCardByCode($quoteId, $giftCardCode)) {
+                    $error = $this->__('Gift card "%s" is not valid.', Mage::helper('core')->escapeHtml($giftCardCode));
                 }
-
             } catch (Mage_Core_Exception $e) {
                 $error = $e->getMessage();
             } catch (Exception $e) {
@@ -129,41 +95,16 @@ class MT_Giftcard_Checkout_CartController
     public function giftCardAjaxAction()
     {
         $error = false;
-        $response = '';
 
         if ($this->_getCart()->getQuote()->getItemsCount()) {
             $giftCardCode = (string) $this->getRequest()->getParam('giftcard_code');
             $helper = Mage::helper('giftcard');
             try {
-                $codeLength = strlen($giftCardCode);
-                $isCodeLengthValid = $codeLength && $codeLength <= MT_Giftcard_Model_Giftcard::GIFT_CARD_CODE_MAX_LENGTH;
-
-                if (!Mage::getModel('giftcard/giftcard')->isCodeActive($giftCardCode))
-                    throw new Mage_Core_Exception($helper->__('Bad gift card code.'));
-
-
-                if ($helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode))
-                    throw new Mage_Core_Exception($helper->__('This gift card already added.'));
-
-                $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-                $this->_getQuote()->setMtGiftCard(
-                    $helper->prepareQuoteGiftCard(
-                        $this->_getQuote()->getMtGiftCard(),
-                        $isCodeLengthValid ? $giftCardCode : ''
-                    ))
-                    ->collectTotals()
-                    ->save();
-
-                if ($codeLength) {
-                    if ($isCodeLengthValid && $helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode)) {
-                        $response = $this->__('Gift card "%s" was applied.', Mage::helper('core')->escapeHtml($giftCardCode));
-                    } else {
-                        $error = $this->__('Gift card "%s" is not valid.', Mage::helper('core')->escapeHtml($giftCardCode));
-                    }
-                } else {
-                    $error = $this->__('Gift card was canceled.');
+                $quoteId = $this->_getQuote()->getId();
+                $giftCardQuote = Mage::getModel('giftcard/quote');
+                if (!$giftCardQuote->addGiftCardByCode($quoteId, $giftCardCode)) {
+                    $error = $this->__('Gift card "%s" is not valid.', Mage::helper('core')->escapeHtml($giftCardCode));
                 }
-
             } catch (Mage_Core_Exception $e) {
                 $error = $e->getMessage();
             } catch (Exception $e) {
@@ -171,6 +112,7 @@ class MT_Giftcard_Checkout_CartController
                 Mage::logException($e);
             }
         }
+
         $response = $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard','payment_giftcard_form_giftcard',array(
             'error' => $error,
         ))->renderView();
@@ -193,45 +135,23 @@ class MT_Giftcard_Checkout_CartController
         }
 
         $giftCardCode = (string) $this->getRequest()->getParam('giftcard_code');
-        $helper = Mage::helper('giftcard');
+
         try {
-            $codeLength = strlen($giftCardCode);
-            $isCodeLengthValid = $codeLength && $codeLength <= MT_Giftcard_Model_Giftcard::GIFT_CARD_CODE_MAX_LENGTH;
-
-            if (!Mage::getModel('giftcard/giftcard')->isCodeActive($giftCardCode))
-                throw new Mage_Core_Exception($helper->__('Bad gift card code.'));
-
-
-            if ($helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode))
-                throw new Mage_Core_Exception($helper->__('This gift card already added.'));
-
-            $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-            $this->_getQuote()->setMtGiftCard(
-                $helper->prepareQuoteGiftCard(
-                    $this->_getQuote()->getMtGiftCard(),
-                    $isCodeLengthValid ? $giftCardCode : ''
-                ))
-                ->collectTotals()
-                ->save();
-
-            if ($codeLength) {
-                if ($isCodeLengthValid && $helper->isGiftCardCodeAddedToQuote($this->_getQuote()->getMtGiftCard(), $giftCardCode)) {
-                    $this->_getSession()->addSuccess(
-                        $this->__('Gift card "%s" was applied.', Mage::helper('core')->escapeHtml($giftCardCode))
-                    );
-                } else {
-                    $this->_getSession()->addError(
-                        $this->__('Gift card "%s" is not valid.', Mage::helper('core')->escapeHtml($giftCardCode))
-                    );
-                }
+            $quoteId = $this->_getQuote()->getId();
+            $giftCardQuote = Mage::getModel('giftcard/quote');
+            if ($giftCardQuote->addGiftCardByCode($quoteId, $giftCardCode)) {
+                $this->_getSession()->addSuccess(
+                    $this->__('Gift card "%s" was applied.', Mage::helper('core')->escapeHtml($giftCardCode))
+                );
             } else {
-                $this->_getSession()->addSuccess($this->__('Gift card was canceled.'));
+                $this->_getSession()->addError(
+                    $this->__('Gift card "%s" is not valid.', Mage::helper('core')->escapeHtml($giftCardCode))
+                );
             }
-
         } catch (Mage_Core_Exception $e) {
             $this->_getSession()->addError($e->getMessage());
-        } catch (Exception $e) {
-            $this->_getSession()->addError($this->__('Cannot apply the gift card.'));
+        } catch (Exception $e) { print_r($e);
+            $this->_getSession()->addError($this->__('Error! Please contact with administrator'));
             Mage::logException($e);
         }
 
@@ -247,20 +167,13 @@ class MT_Giftcard_Checkout_CartController
             $this->_getSession()->addError($this->__('Please select Gift Cards which want to remove.'));
             return;
         }
-        $helper = Mage::helper('giftcard');
-        $giftCardCodes = $helper->removeQuoteGiftCardCodes($this->_getQuote()->getMtGiftCard(),$removeCodes);
 
         try {
-            $this->_getQuote()->getShippingAddress()->setCollectShippingRates(true);
-            $this->_getQuote()->setMtGiftCard($giftCardCodes)
-                ->collectTotals()
-                ->save();
-
-            if ($this->_getQuote()->getMtGiftCard() == $giftCardCodes) {
-                $this->_getSession()->addSuccess(
-                    $this->__('Gift cards was deleted.')
-                );
-            }
+            $quoteId = $this->_getQuote()->getId();
+            Mage::getModel('giftcard/quote')->removeGiftCardArrayFromQuote($quoteId, $removeCodes);
+            $this->_getSession()->addSuccess(
+                $this->__('Gift cards was removed.')
+            );
         } catch (Mage_Core_Exception $e) {
             $this->_getSession()->addError($e->getMessage());
         } catch (Exception $e) {

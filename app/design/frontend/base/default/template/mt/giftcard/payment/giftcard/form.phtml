@@ -1,3 +1,5 @@
+<?php if ($this->isActive()): ?>
+
 <?php $formVisible = Mage::helper('giftcard')->isPaymentMethodFormVisible();?>
 <script type="text/javascript">
     var paymentElement = $('p_method_giftcard');
@@ -14,3 +16,8 @@
     });
 </script>
 <?php echo $this->getLayout()->createBlock('giftcard/payment_giftcard_form_giftcard')->toHtml(); ?>
+<?php else: ?>
+    <script type="text/javascript">
+        GiftCardCheckout.hidePaymentMethod();
+    </script>
+<?php endif;?>

@@ -3,29 +3,21 @@
 class MT_Giftcard_Model_Sales_Quote_Total_Giftcard
     extends Mage_Sales_Model_Quote_Address_Total_Abstract
 {
-    private $__calculator = null;
-
-    public function __construct()
-    {
-        $this->__calculator = Mage::getSingleton('giftcard/sales_discount');
-    }
-
-    protected function _getCalc()
-    {
-        return $this->__calculator;
-    }
 
     public function collect(Mage_Sales_Model_Quote_Address $address)
     {
         parent::collect($address);
 
-        $discount = $this->_getCalc()->getQuoteTotalDiscount($address);
+        $giftCardQuote = Mage::getModel('giftcard/quote');
+        $quote = $address->getQuote();
+        $baseDiscount = $giftCardQuote->calculateDiscount($address, $quote->getBaseCurrencyCode());
+        $discount =  $giftCardQuote->calculateDiscount($address, $quote->getQuoteCurrencyCode());
 
         $this->_addAmount($discount);
-        $this->_addBaseAmount($discount);
+        $this->_addBaseAmount($baseDiscount);
 
         $address->setMtGiftCardTotal($discount);
-        $address->setBaseMtGiftCardTotal($discount);
+        $address->setBaseMtGiftCardTotal($baseDiscount);
         return $this;
     }
 
@@ -40,7 +32,6 @@ class MT_Giftcard_Model_Sales_Quote_Total_Giftcard
             } else {
                 $title = Mage::helper('giftcard')->__('Gift Card Discount');
             }
-
 
             $address->addTotal(array(
                 'code'  => $this->getCode(),

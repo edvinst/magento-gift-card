@@ -40,76 +40,6 @@ class MT_Giftcard_Helper_Data extends Mage_Core_Helper_Abstract
         return $file;
     }
 
-    public function prepareQuoteGiftCard($currentValue, $giftCardCode)
-    {
-        if (empty($giftCardCode))
-            return $currentValue;
-
-        if ($this->isGiftCardCodeAddedToQuote($currentValue, $giftCardCode))
-            return $currentValue;
-
-        $codes = unserialize($currentValue);
-
-        if (!is_array($codes))
-            $codes = array();
-
-        $codes[] = array('code' => $giftCardCode);
-        return serialize($codes);
-    }
-
-    public function isGiftCardCodeAddedToQuote($currentValue, $giftCardCode)
-    {
-        if (empty($giftCardCode))
-            return true;
-
-        $codes = unserialize($currentValue);
-
-        if (!is_array($codes))
-            return false;
-
-        foreach ($codes as $code) {
-            if ($code['code'] == $giftCardCode)
-                return true;
-        }
-
-        return false;
-    }
-
-    public function removeQuoteGiftCardCodes($currentValue, $removeCodes)
-    {
-        if (count($removeCodes) == 0)
-            return $currentValue;
-
-        $codes = unserialize($currentValue);
-
-        if (!is_array($codes))
-            return $currentValue;
-
-        foreach ($codes as $key => $appliedCode) {
-            foreach ($removeCodes as $removeCode) {
-                if ($appliedCode['code'] == $removeCode)
-                    unset($codes[$key]);
-            }
-        }
-
-        return serialize($codes);
-    }
-
-    public function getGiftCardCodeArray($currentValue)
-    {
-        $codes = array();
-        $giftCardData = unserialize($currentValue);
-
-        if (!is_array($giftCardData))
-            return $codes;
-
-        foreach ($giftCardData as $code) {
-            $codes[] = $code['code'];
-        }
-
-        return $codes;
-    }
-
     public function hex2rgb($hex)
     {
         $hex = str_replace("#", "", $hex);
@@ -146,16 +76,37 @@ class MT_Giftcard_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function isPaymentMethodFormVisible()
     {
+        $quoteId = Mage::getSingleton('checkout/cart')->getQuote()->getId();
+        $giftCardCollection = Mage::getSingleton('giftcard/quote')->getGiftCardCollection($quoteId);
         if (Mage::app()->getRequest()->getParam('is_form_visible') == 0
-            && count($this->getAppliedGiftCardCollection()) == 0
+            && $giftCardCollection->count() == 0
         ) {
             return false;
         }
         return true;
     }
 
-    public function getAppliedGiftCardCollection()
+    public function hasGiftCardProductInCart()
     {
-        return Mage::getSingleton('giftcard/checkout_giftcard')->getQuoteGiftCardCollection();
+        $cart = Mage::getModel('checkout/cart')->getQuote();
+        $items = $cart->getAllItems();
+        if (count($items) == 0)
+            return false;
+
+        foreach ($items as $item) {
+            if ($item->getProduct()->getTypeId() == MT_Giftcard_Model_Catalog_Product_Type::TYPE_GIFTCARD_PRODUCT)
+                return true;
+        }
+
+        return false;
+    }
+
+    public function convertToCurrentCurrency($price, $currencyCode)
+    {
+        return Mage::helper('directory')->currencyConvert(
+            $price,
+            $currencyCode,
+            Mage::app()->getStore()->getCurrentCurrencyCode()
+        );
     }
 }

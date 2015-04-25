@@ -158,4 +158,9 @@ class MT_Giftcard_Model_Series extends Mage_Core_Model_Abstract
 
         return $seriesCollection;
     }
+
+    public function getCurrency()
+    {
+        return Mage::app()->getStore()->getBaseCurrencyCode();
+    }
 }

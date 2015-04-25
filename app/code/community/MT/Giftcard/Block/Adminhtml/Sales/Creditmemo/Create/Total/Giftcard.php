@@ -3,13 +3,12 @@
 class MT_Giftcard_Block_Adminhtml_Sales_Creditmemo_Create_Total_Giftcard
     extends Mage_Core_Block_Template
 {
-    protected $_giftCardArray = null;
+    private $__giftCardOrderCollection = null;
 
     public function initTotals()
     {
-        $parent = $this->getParentBlock();
-        $giftCards = $this->getGiftCardArray();
-        if (!$giftCards)
+        $giftCards = $this->getGiftCardOrderCollection();
+        if ($giftCards->count() == 0)
             return $this;
 
         $total = new Varien_Object(array(
@@ -17,59 +16,24 @@ class MT_Giftcard_Block_Adminhtml_Sales_Creditmemo_Create_Total_Giftcard
             'block_name' => 'gift_card_total'
         ));
 
+        $parent = $this->getParentBlock();
         $parent->addTotal($total);
         return $this;
     }
 
-
-    public function getGiftCardArray()
+    public function getOrder()
     {
-        if ($this->_giftCardArray == null) {
-            $parent = $this->getParentBlock();
-            $order = $parent->getOrder();
-            $giftCards = $order->getMtGiftCard();
-            if (empty($giftCards))
-                return false;
+        $parent = $this->getParentBlock();
+        return $parent->getOrder();
+    }
 
-            $giftCards = unserialize($giftCards);
-
-            if (!$giftCards)
-                return false;
-
-            foreach ($giftCards as $key => $giftCard) {
-                if (!isset($giftCard['code'])) {
-                    unset($giftCard[$key]);
-                    continue;
-                }
-
-                $model = Mage::getModel('giftcard/giftcard')->loadByCode($giftCard['code']);
-                if (!is_numeric($model->getId())) {
-                    unset($giftCards[$key]);
-                    continue;
-                }
-
-
-                $giftCards[$key]['source'] = $model;
-                $giftCards[$key]['total'] = 0;
-
-                if (isset($giftCard['discount']))
-                    $giftCards[$key]['total'] = $giftCard['discount']*-1;
-
-                if (isset($giftCard['refunded']))
-                    $giftCards[$key]['total']-=$giftCard['refunded'];
-
-                if ($giftCards[$key]['total'] < 0)
-                    $giftCards[$key]['total'] = 0;
-
-                $giftCards[$key]['total'] = Mage::getModel('directory/currency')->format(
-                    $giftCards[$key]['total'],
-                    array('display'=>Zend_Currency::NO_SYMBOL),
-                    false
-                );
-            }
-            $this->_giftCardArray = $giftCards;
+    public function getGiftCardOrderCollection()
+    {
+        if ($this->__giftCardOrderCollection == null) {
+            $order = $this->getOrder();
+            $collection = Mage::getModel('giftcard/order')->getCollectionByOrderId($order->getId());
+            $this->__giftCardOrderCollection = $collection;
         }
-
-        return $this->_giftCardArray;
+        return $this->__giftCardOrderCollection;
     }
 }

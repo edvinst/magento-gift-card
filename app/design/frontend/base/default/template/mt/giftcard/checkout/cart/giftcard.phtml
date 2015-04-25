@@ -1,10 +1,10 @@
 <?php
-if ($this->isVisible()):
+if ($this->isActive()):
 $giftCardCollection = $this->getAppliedGiftCards();
 $amount = $this->getAmount();
 $cartTotal = $this->getCartTotalWithoutGiftCard();
 ?>
-<form id="discount-giftcard-form" action="<?php echo $this->getUrl(/*'checkout/cart/giftcardPost'*/'giftcard/checkout_cart/giftcardpost') ?>" method="post">
+<form id="discount-giftcard-form" action="<?php echo $this->getUrl('giftcard/checkout_cart/giftCardPost') ?>" method="post">
 
     <div class="discount gc giftcard">
         <h2><?php echo $this->__('Gift Card') ?></h2>
@@ -29,8 +29,14 @@ $cartTotal = $this->getCartTotalWithoutGiftCard();
                             <?php else: ?>
                                 <input name="giftcard_remove[]" value="<?php echo $giftCard->getCode();?>" type="hidden">
                             <?php endif; ?>
-                            <label><?php echo $giftCard->getCode();?>                                                                        -
-                                <span class="price"><?php echo $giftCard->getFormatedBalance();?></span>
+                            <label><?php echo $giftCard->getCode();?>
+                                <?php $currentCurrency = Mage::app()->getStore()->getCurrentCurrencyCode();?>
+                                -
+                                <span class="price"><?php echo $giftCard->getFormatedBalance($currentCurrency);?>
+                                <?php if ($giftCard->getCurrency() != $currentCurrency): ?>
+                                    (<?php echo $giftCard->getFormatedBalance();?>)
+                                <?php endif; ?>
+                                </span>
                             </label>
                         </li>
                         <?php endforeach; ?>

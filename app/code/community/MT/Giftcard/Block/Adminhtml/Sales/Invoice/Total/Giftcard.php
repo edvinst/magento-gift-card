@@ -1,6 +1,6 @@
 <?php
 
-class MT_Giftcard_Block_Adminhtml_Sales_Total_Giftcard
+class MT_Giftcard_Block_Adminhtml_Sales_Invoice_Total_Giftcard
     extends Mage_Core_Block_Abstract
 {
     public function initTotals()
@@ -23,17 +23,8 @@ class MT_Giftcard_Block_Adminhtml_Sales_Total_Giftcard
                     'field' => 'mt_gift_card_total_discount_'.$item->getId()
                 ));
 
-                $totalRefunded = new Varien_Object(array(
-                    'code'  =>  'mt_gift_card_total_refund_'.$item->getId(),
-                    'value' => $item->getRefund(),
-                    'base_value' => $item->getBaseRefund(),
-                    'label' => $this->__('Refunded to Gift Card (%s)',$item->getGiftCardCode()),
-                    'field' => 'mt_gift_card_total_refund_'.$item->getId()
-                ));
-
                 $parent = $this->getParentBlock();
                 $parent->addTotal($totalDiscounted, 'mt_gift_card_total_discount_'.$item->getId());
-                $parent->addTotal($totalRefunded, 'mt_gift_card_total_refund_'.$item->getId());
             }
         }
         return $this;

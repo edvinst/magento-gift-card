@@ -13,4 +13,13 @@ class MT_Giftcard_Block_Payment_Giftcard_Form
     {
         return Mage::getUrl('giftcard/checkout_cart');
     }
+
+    public function isActive()
+    {
+        $helper = Mage::helper('giftcard');
+        if (!$helper->isActive())
+            return false;
+
+        return Mage::helper('giftcard')->hasGiftCardProductInCart() == false;
+    }
 }

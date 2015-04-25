@@ -2,7 +2,7 @@
 <config>
     <modules>
         <MT_Giftcard>
-            <version>1.0.14</version>
+            <version>1.1.2</version>
         </MT_Giftcard>
     </modules>
     <global>
@@ -51,6 +51,15 @@
                     <series_product>
                         <table>mt_giftcard_series_product</table>
                     </series_product>
+                    <check_attempt>
+                        <table>mt_giftcard_check_attempt</table>
+                    </check_attempt>
+                    <quote>
+                        <table>mt_giftcard_quote</table>
+                    </quote>
+                    <order>
+                        <table>mt_giftcard_order</table>
+                    </order>
                 </entities>
             </giftcard_resource>
 
@@ -246,16 +255,6 @@
                 </observers>
             </sales_order_creditmemo_refund>
 
-            <sales_order_invoice_register>
-                <observers>
-                    <forced_credit_memo>
-                        <type>singleton</type>
-                        <class>MT_Giftcard_Model_Observer</class>
-                        <method>forcedCreditMemo</method>
-                    </forced_credit_memo>
-                </observers>
-            </sales_order_invoice_register>
-
             <sales_order_invoice_save_after>
                 <observers>
                     <active_gift_card>
@@ -327,7 +326,7 @@
     <default>
         <payment>
             <giftcard>
-                <active>1</active>
+                <active>0</active>
                 <model>giftcard/payment_giftcard</model>
                 <title>Use Gift Card to check out</title>
                 <sort_order>900</sort_order>

@@ -100,10 +100,13 @@ class MT_Giftcard_Model_Giftcard_Action
         $giftCardIds = array();
         $collection = Mage::getModel('giftcard/giftcard')->getCollection()
             ->addFieldToFilter('order_id', $orderId);
-        if ($collection->count() > 0) {
-            foreach ($collection as $item) {
-                $giftCardIds[] = $item->getId();
-            }
+
+        if ($collection->count() == 0) {
+            return false;
+        }
+
+        foreach ($collection as $item) {
+            $giftCardIds[] = $item->getId();
         }
 
         return $this->exportGiftCardList($giftCardIds, $format);

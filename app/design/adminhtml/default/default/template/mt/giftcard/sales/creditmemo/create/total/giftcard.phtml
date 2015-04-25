@@ -1,14 +1,28 @@
-<?php $giftCards = $this->getGiftCardArray();  ?>
-<?php if (count($giftCards) != 0): ?>
-    <?php foreach ($giftCards as $giftCard): ?>
-        <?php  $giftCardObj = $giftCard['source']; ?>
+<?php
+$order = $this->getOrder();
+$collection = $this->getGiftCardOrderCollection();
+?>
+<?php if ($collection->count() > 0): ?>
+    <?php foreach ($collection as $item): ?>
+        <?php
+
+        $giftCard = $item->getGiftCard();
+        if ($giftCard->getId()):
+            $refund = Mage::getModel('directory/currency')->format(
+                $item->getBaseDiscount()-$item->getBaseRefund(),
+                array('display'=>Zend_Currency::NO_SYMBOL),
+                false
+            );
+        ?>
         <tr>
             <td class="label">
-                <?php echo $this->__('Refund to Gift Card (%s)', $giftCard['code']) ?></td>
-            <td><input type="text" name="gift_card[<?php echo $giftCardObj->getId()?>]" value="<?php echo $giftCard['total']?>" class="input-text not-negative-amount" style="width:60px;text-align:right" id="shipping_amount" /></td>
+                <?php echo $this->__('Refund to Gift Card (%s)', $item->getGiftCardCode()) ?></td>
+            <td>
+                <input type="text" name="gift_card_order_item[<?php echo $item->getId()?>]" value="<?php echo $refund; ?>" class="input-text not-negative-amount" style="width:60px;text-align:right" id="shipping_amount" /></td>
         </tr>
         <tr>
             <td colspan="2"></td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
 <?php endif; ?>

@@ -14,18 +14,12 @@ class MT_Giftcard_Model_Observer
             $creditMemo->setAllowZeroGrandTotal(1);
     }
 
-    public function forcedCreditMemo($observer)
-    {
-        $order = $observer->getOrder();
-        if ($order->getBaseMtGiftCardTotal() != 0) {
-            $order->setForcedCanCreditmemo(1);
-        }
-    }
-
     public function createGiftCard($event)
     {
         $order = $event->getOrder();
         Mage::getModel('giftcard/giftcard_action')->assignGiftCardToOrder($order);
+
+        Mage::dispatchEvent('giftcard_active_after', array('order' => $order));
     }
 
     public function activeGiftCard($observer)
@@ -46,7 +40,7 @@ class MT_Giftcard_Model_Observer
             $giftCard->setExpiredAt();
             $giftCard->save();
         }
-
+        Mage::dispatchEvent('giftcard_active_after', array('order' => $order));
         return;
     }
 
@@ -64,7 +58,7 @@ class MT_Giftcard_Model_Observer
             return;
 
         foreach ($giftCardCollection as $giftCard) {
-            $giftCard->setStatus(MT_Giftcard_Model_Giftcard::STATUS_PENDING);
+            $giftCard->setStatus(MT_Giftcard_Model_Giftcard::STATUS_INACTIVE);
             $giftCard->save();
         }
 
@@ -89,111 +83,108 @@ class MT_Giftcard_Model_Observer
 
         $order = $observer->getEvent()->getOrder();
         $quote = Mage::getSingleton('checkout/cart')->getQuote();
-        $address = $quote->getShippingAddress();
-        if (!$address) {
-            return;
-        }
+        $baseCurrency = $quote->getBaseCurrencyCode();
+        $quoteCurrency = $quote->getQuoteCurrencyCode();
+        $addressesCollection = $quote->getAddressesCollection();
+        $giftCardQuote = Mage::getModel('giftcard/quote');
 
-        $discountedFromGiftCard = $address->getMtGiftCardTotal()*-1;
-        $giftCardData = $order->getMtGiftCard();
-        $giftCards = Mage::helper('giftcard')->getGiftCardCodeArray($giftCardData);
-        $giftCardData = unserialize($giftCardData);
+        foreach ($addressesCollection as $address) {
+            $discountLabel = '';
+            $totalGiftCardBalance = 0;
 
-        if ($discountedFromGiftCard == 0)
-            return;
+            //in base currency
+            $discountedFromGiftCard = $address->getBaseMtGiftCardTotal() * -1;
+            if ($discountedFromGiftCard == 0)
+                continue;
 
-        if (count($giftCards) == 0)
-            throw new Mage_Core_Exception(Mage::helper('giftcard')->__('Gift Card is no longer available to use.'));
+            $giftCardCollection = $giftCardQuote->getGiftCardCollection($quote->getId());
 
+            $totalGiftCardBalance = $this->getTotalBalance($giftCardCollection, $baseCurrency);
+            if ($totalGiftCardBalance < $discountedFromGiftCard)
+                throw new Mage_Core_Exception(Mage::helper('giftcard')->__('Not enough balance in gift card'));
 
-        $totalBalance = 0;
-        $giftCardCollection = Mage::getModel('giftcard/giftcard')->getCollection()
-            ->addFieldToFilter('code', array('in' => $giftCards))
-            ->addFieldToFilter('status', MT_Giftcard_Model_Giftcard::STATUS_SOLD)
-            ->addFieldToFilter('balance', array('gt' => 0));
+            foreach ($giftCardCollection as $giftCard) {
+                $giftCardBalance = $giftCard->getBalance($baseCurrency);
+                if ($discountedFromGiftCard >= $giftCardBalance) {
+                    $discount = $giftCardBalance;
+                } else {
+                    $discount = $discountedFromGiftCard;
+                }
 
+                //in base currency
+                $balance = $giftCardBalance - $discount;
+                $giftCard->discount($balance, $baseCurrency);
+                $discountedFromGiftCard -= $discount;
 
-        foreach ($giftCardCollection as $giftCard) {
-            if (!is_numeric($giftCard->getId()))
-                throw new Mage_Core_Exception(Mage::helper('giftcard')->__('Bad gift card code'));
-            if ($giftCard->getStatus() != MT_Giftcard_Model_Giftcard::STATUS_SOLD)
-                throw new Mage_Core_Exception(Mage::helper('giftcard')->__('Gift Card "%s" is no longer available to use.', $giftCard->getCode()));
-            $totalBalance += $giftCard->getBalance();
-        }
+                if ($quoteCurrency == $baseCurrency) {
+                    $quoteDiscount = $discount;
+                } else {
+                    $quoteDiscount = Mage::helper('directory')->currencyConvert(
+                        $discount,
+                        $baseCurrency,
+                        $quoteCurrency
+                    );
+                    $quoteDiscount = number_format($quoteDiscount, 2);
+                }
 
-        if ($totalBalance < $discountedFromGiftCard)
-            throw new Mage_Core_Exception(Mage::helper('giftcard')->__('Not enough balance in gift card'));
+                Mage::getModel('giftcard/order')->addGiftCardByCode($order->getId(), $giftCard->getCode(), $quoteDiscount, $discount);
 
-        $discountLabel = '';
-        foreach ($giftCardCollection as $giftCard) {
-            $giftCardBalance = $giftCard->getBalance();
-            if ($discountedFromGiftCard >= $giftCardBalance)
-                $discount = $giftCardBalance;
-            else
-                $discount = $discountedFromGiftCard;
-
-            $balance = $giftCardBalance - $discount;
-            $giftCard->setBalance($balance);
-            if ($giftCard->getBalance() <= 0)
-                $giftCard->setStatus(MT_Giftcard_Model_Giftcard::STATUS_INACTIVE);
-
-            $giftCard->save();
-            $discountedFromGiftCard -= $discount;
-            $discountLabel .= $giftCard->getCode().' (-'.Mage::helper('core')->currency($discount, true, false).'), ';
-
-            foreach ($giftCardData as $key => $item) {
-                if ($item['code'] == $giftCard->getCode())
-                    $giftCardData[$key]['discount'] = -$discount;
+                if ($totalGiftCardBalance <= 0 || $discountedFromGiftCard <= 0)
+                    break;
             }
-
-            if ($totalBalance <= 0)
-                break;
         }
-        $order->setMtGiftCardDescription(rtrim($discountLabel, ', '));
-        $order->setMtGiftCard(serialize($giftCardData));
-        $order->setForcedCanCreditmemo(0);
-        $order->save();
+    }
+
+    protected function getTotalBalance($giftCardCollection, $currency)
+    {
+        $totalGiftCardBalance = 0;
+        foreach ($giftCardCollection as $giftCard) {
+            $totalGiftCardBalance += $giftCard->getBalance($currency);
+        }
+        return $totalGiftCardBalance;
     }
 
     public function refundGiftCardBalance($observer)
     {
-        $params = Mage::app()->getRequest()->getParam('gift_card');
-
-        if (count($params) == 0)
+        $giftCardOrderItemIds = Mage::app()->getRequest()->getParam('gift_card_order_item');
+        if (count($giftCardOrderItemIds) == 0)
             return;
 
-        $order = $observer->getCreditmemo()->getOrder();
-        $giftCards = unserialize($order->getMtGiftCard());
-
-        if (count($giftCards) == 0)
-            return;
-
-        foreach ($params as $giftCardId => $refundValue)
-        {
-            $giftCard = Mage::getModel('giftcard/giftcard')->load($giftCardId);
-            if (!$giftCard->getId())
-                continue;
-
-            if ($giftCard->getStatus() == MT_Giftcard_Model_Giftcard::STATUS_INACTIVE
-                && $giftCard->getBalance() == 0
-                && $refundValue != 0
-            )
-                $giftCard->setStatus(MT_Giftcard_Model_Giftcard::STATUS_SOLD);
-
-            $giftCard->setBalance(($giftCard->getBalance()+$refundValue));
-            $giftCard->save();
-
-            foreach ($giftCards as $key => $giftCardData) {
-                if ($giftCardData['code'] == $giftCard->getCode())
-                    $giftCards[$key]['refunded'] = $refundValue;
-            }
-        }
-
+        $totalRefund = 0;
+        $totalBaseRefund = 0;
         $creditMemo = $observer->getCreditmemo();
-        $creditMemo->getOrder()->setMtGiftCard(serialize($giftCards));
-        $creditMemo->getOrder()->setForcedCanCreditmemo(0);
-        $creditMemo->setMtGiftCard(serialize($giftCards));
+        $order = $creditMemo->getOrder();
+        $baseCurrency = $order->getBaseCurrencyCode();
+        $orderCurrency = $order->getOrderCurrencyCode();
 
+        foreach ($giftCardOrderItemIds as $itemId => $baseRefundValue)
+        {
+            $giftCardOrder = Mage::getModel('giftcard/order')->load($itemId);
+            if (!$giftCardOrder->getId()) {
+                continue;
+            }
+            $giftCard = $giftCardOrder->getGiftCard();
+            if (!$giftCard->getId() || $baseRefundValue == 0) {
+                continue;
+            }
+            $giftCard->refund($baseRefundValue, $baseCurrency);
+
+            if ($orderCurrency == $baseCurrency) {
+                $refundValue = $baseRefundValue;
+            } else {
+                $refundValue = Mage::helper('directory')->currencyConvert(
+                    $baseRefundValue,
+                    $baseCurrency,
+                    $orderCurrency
+                );
+                $refundValue = number_format($refundValue, 2);
+            }
+            $giftCardOrder->setBaseRefund($baseRefundValue);
+            $giftCardOrder->setRefund($refundValue);
+            $giftCardOrder->save();
+            $totalRefund+=$refundValue;
+            $totalBaseRefund+=$baseRefundValue;
+        }
         return;
     }
 }
