@@ -6,12 +6,15 @@ var GiftCardCheckout = {
     {
         GiftCardCheckout.config = config;
         GiftCardCheckout.updateEvents();
-        payment.addAfterInitFunction('giftcard', function(){
-            GiftCardCheckout.initEvents();
-            GiftCardCheckout.updateEvents();
-            GiftCardCheckout.endLoading();
-        });
     },
+
+    initPayment: function()
+    {
+        GiftCardCheckout.initEvents();
+        GiftCardCheckout.updateEvents();
+        GiftCardCheckout.endLoading();
+    },
+
 
     initEvents: function()
     {
@@ -106,6 +109,11 @@ var GiftCardCheckout = {
         jQuery('input[name="apply_gift_card[]"]').removeAttr('disabled');
         jQuery('#p_method_giftcard').removeAttr('disabled');
         jQuery('#gift_card_code').removeAttr('disabled');
+    },
+
+    hidePaymentMethod: function()
+    {
+        jQuery('#p_method_giftcard').parent().remove();
     }
 };
 
