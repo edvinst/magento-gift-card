@@ -153,12 +153,6 @@
         </reference>
     </giftcard_giftcard_status>
 
-    <customer_account>
-        <reference name="customer_account_navigation">
-            <action method="addLink" translate="label" module="sales"><name>giftcards</name><path>giftcard/giftcard/account/</path><label>My Gift Cards</label></action>
-        </reference>
-    </customer_account>
-
     <giftcard_giftcard_account>
         <label>Customer My Gift Cards</label>
         <update handle="customer_account"/>
